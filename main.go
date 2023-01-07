@@ -9,7 +9,7 @@ import (
 
 func main() {
 	config.Load()
-	images := images.List()
+	images := images.ListAll()
 	fmt.Println(images)
 	posts := posts.List()
 	fmt.Println(posts)

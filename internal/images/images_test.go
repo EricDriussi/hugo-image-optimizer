@@ -3,6 +3,7 @@ package images_test
 import (
 	"hugo-images/internal/config"
 	"hugo-images/internal/images"
+	"hugo-images/internal/posts"
 	"os"
 	"testing"
 
@@ -12,6 +13,7 @@ import (
 func TestMain(m *testing.M) {
 	viper.AddConfigPath("../../")
 	viper.Set("dirs.project", "../../test/data/")
+	viper.Set("dirs.posts", "posts/")
 	viper.Set("dirs.images", "images/")
 	config.Load()
 
@@ -19,16 +21,32 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-func TestReadsImages(t *testing.T) {
-	result := images.List()
+func TestListsAllImages(t *testing.T) {
+	result := images.ListAll()
 	if len(result) < 1 {
 		t.Fail()
 	}
 }
 
-func TestExcludesImages(t *testing.T) {
-	result := images.List()
+func TestListsAllExcludingImages(t *testing.T) {
+	result := images.ListAll()
 	if contains(result, "avatar.jpg") {
+		t.Fail()
+	}
+}
+
+func TestListsUnusedImages(t *testing.T) {
+	posts := posts.List()
+	imagesList := images.ListUnusedIn(posts)
+	if imagesList["an_image.png"] {
+		t.Fail()
+	}
+}
+
+func TestListsUnusedImagesIgnoresUsedImages(t *testing.T) {
+	posts := posts.List()
+	imagesList := images.ListUnusedIn(posts)
+	if !imagesList["a_gif.gif"] || !imagesList["another_image.jpeg"] {
 		t.Fail()
 	}
 }
