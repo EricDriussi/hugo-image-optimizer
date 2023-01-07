@@ -33,9 +33,9 @@ func TestExcludesImages(t *testing.T) {
 	}
 }
 
-func contains(slice []string, elem string) bool {
-	for _, value := range slice {
-		if value == elem {
+func contains(mp map[string]bool, elem string) bool {
+	for key := range mp {
+		if key == elem {
 			return true
 		}
 	}
