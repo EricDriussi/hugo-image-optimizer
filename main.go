@@ -3,14 +3,11 @@ package main
 import (
 	"fmt"
 	"hugo-images/internal/config"
-	"hugo-images/internal/images"
-	"hugo-images/internal/posts"
+	"hugo-images/internal/image_service"
 )
 
 func main() {
 	config.Load()
-	images := images.ListAll()
+	images := imageService.ImagesInIncludedDirs()
 	fmt.Println(images)
-	posts := posts.List()
-	fmt.Println(posts)
 }
