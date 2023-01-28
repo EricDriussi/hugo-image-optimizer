@@ -10,7 +10,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-func RM_images(path string, list []string) error {
+func RM_images(list []string) error {
+	var (
+		working_dir = viper.GetString("dirs.project")
+		images_dir  = viper.GetString("dirs.images")
+	)
+
+	path := fmt.Sprintf("%s%s", working_dir, images_dir)
+
 	return filepath.Walk(path, func(filepath string, file os.FileInfo, error error) error {
 		if file.IsDir() || filepath_is_excluded(filepath) {
 			return nil

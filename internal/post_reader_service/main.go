@@ -1,11 +1,9 @@
 package postReader
 
 import (
-	"bytes"
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 
 	"github.com/spf13/viper"
 )
@@ -28,26 +26,4 @@ func All_posts_as_bytes() []byte {
 	})
 
 	return append([]byte{}, posts_stack...)
-}
-
-func Filter_md_images(text *[]byte) []byte {
-	var result bytes.Buffer
-	r, _ := regexp.Compile("!\\[.*\\]\\(.*\\)")
-	matches := r.FindAll(*text, -1)
-	for _, match := range matches {
-		result.Write(match)
-	}
-	return result.Bytes()
-}
-
-func bytesAreEqual(a, b []byte) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i, v := range a {
-		if v != b[i] {
-			return false
-		}
-	}
-	return true
 }
