@@ -21,4 +21,5 @@ var convertCmd = &cobra.Command{
 }
 
 func Convert_to_webp(images []string) {
+	imageService.Convert_images(images)
 }

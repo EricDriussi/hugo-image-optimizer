@@ -2,6 +2,7 @@ package imageService
 
 import (
 	"fmt"
+	"hugo-images/internal/image_service/converter"
 	"hugo-images/internal/util"
 	"os"
 	"path/filepath"
@@ -9,6 +10,41 @@ import (
 
 	"github.com/spf13/viper"
 )
+
+func Convert_images(list []string) error {
+	var (
+		working_dir = viper.GetString("dirs.project")
+		images_dir  = viper.GetString("dirs.images")
+	)
+
+	path := fmt.Sprintf("%s%s", working_dir, images_dir)
+
+	return filepath.Walk(path, func(filepath string, file os.FileInfo, error error) error {
+		if file.IsDir() || filepath_is_excluded(filepath) {
+			return nil
+		}
+		is_gif := strings.HasSuffix(file.Name(), ".gif")
+		is_png := strings.HasSuffix(file.Name(), ".png")
+		is_jgp := strings.HasSuffix(file.Name(), ".jgp")
+
+		if is_gif {
+			err := converter.Gif(filepath)
+			os.Remove(filepath)
+			return err
+		}
+		if is_png {
+			err := converter.Png(filepath)
+			os.Remove(filepath)
+			return err
+		}
+		if is_jgp {
+			err := converter.Jpg(filepath)
+			os.Remove(filepath)
+			return err
+		}
+		return nil
+	})
+}
 
 func RM_images(list []string) error {
 	var (
