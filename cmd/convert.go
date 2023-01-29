@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	imageService "optimize/internal/image_service"
 
 	"github.com/spf13/cobra"
@@ -21,5 +22,8 @@ var convertCmd = &cobra.Command{
 }
 
 func Convert_to_webp(images []string) {
+	fmt.Println("Converting all images to .webp")
+	fmt.Println(".gif and large .png might take a while...")
 	imageService.Convert_images(images)
+	fmt.Println("Done converting!")
 }
