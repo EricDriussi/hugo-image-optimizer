@@ -15,7 +15,7 @@ func Images_present_in(text *[]byte) []byte {
 
 func md_image_links(text *[]byte) []byte {
 	md_image_links := regexp.
-		MustCompile("!\\[.*\\]\\((.*)\\)").
+		MustCompile("!\\[.*\\]\\((.*\\.(jpg|png|jpeg|gif|webp))\\)").
 		FindAllSubmatch(*text, -1)
 	only_image_paths := []byte{}
 	for _, full_match := range md_image_links {
@@ -26,7 +26,7 @@ func md_image_links(text *[]byte) []byte {
 
 func images_in_front_matter(text *[]byte) []byte {
 	md_image_links := regexp.
-		MustCompile("(?m)^image: (.*\\.(jpg|png|jpeg))$").
+		MustCompile("(?m)^image: (.*\\.(jpg|png|jpeg|webp))$").
 		FindAllSubmatch(*text, -1)
 	only_image_paths := []byte{}
 	for _, full_match := range md_image_links {
