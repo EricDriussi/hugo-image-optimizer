@@ -1,4 +1,4 @@
-module hugo-images
+module optimize
 
 go 1.19
 

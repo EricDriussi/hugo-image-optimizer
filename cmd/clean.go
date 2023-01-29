@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	filterService "hugo-images/internal/filter_service"
-	imageService "hugo-images/internal/image_service"
-	postReader "hugo-images/internal/post_reader_service"
+	filterService "optimize/internal/filter_service"
+	imageService "optimize/internal/image_service"
+	postReader "optimize/internal/post_reader_service"
 
 	"github.com/spf13/cobra"
 )

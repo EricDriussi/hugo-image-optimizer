@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	postReader "hugo-images/internal/post_reader_service"
+	postReader "optimize/internal/post_reader_service"
 
 	"github.com/spf13/cobra"
 )

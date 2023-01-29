@@ -2,8 +2,8 @@ package imageService
 
 import (
 	"fmt"
-	"hugo-images/internal/image_service/converter"
-	"hugo-images/internal/util"
+	"optimize/internal/image_service/converter"
+	"optimize/internal/util"
 	"os"
 	"path/filepath"
 	"strings"

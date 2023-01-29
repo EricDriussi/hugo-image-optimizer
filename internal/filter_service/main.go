@@ -2,7 +2,7 @@ package filterService
 
 import (
 	"bytes"
-	"hugo-images/internal/util"
+	"optimize/internal/util"
 	"regexp"
 )
 

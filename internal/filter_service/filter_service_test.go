@@ -1,8 +1,8 @@
 package filterService_test
 
 import (
-	filterService "hugo-images/internal/filter_service"
-	"hugo-images/internal/util"
+	filterService "optimize/internal/filter_service"
+	"optimize/internal/util"
 	"testing"
 )
 

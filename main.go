@@ -1,8 +1,8 @@
 package main
 
 import (
-	"hugo-images/cmd"
-	"hugo-images/internal/config"
+	"optimize/cmd"
+	"optimize/internal/config"
 )
 
 func main() {

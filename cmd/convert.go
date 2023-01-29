@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	imageService "hugo-images/internal/image_service"
+	imageService "optimize/internal/image_service"
 
 	"github.com/spf13/cobra"
 )
