@@ -15,10 +15,10 @@ var referenceCmd = &cobra.Command{
 	Short: "updates all image references",
 	Long:  "Updates all image references in MD for the .webp extension",
 	Run: func(cmd *cobra.Command, args []string) {
-		all_posts := postReader.All_posts_as_bytes()
-		Update_References(all_posts)
+		Update_References()
 	},
 }
 
-func Update_References(all_posts []byte) {
+func Update_References() {
+	postReader.Update_image_references()
 }

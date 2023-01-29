@@ -32,7 +32,7 @@ var rootCmd = &cobra.Command{
 			image_files := imageService.ImagesInIncludedDirs()
 			Rm_unused_images(all_posts)
 			Convert_to_webp(image_files)
-			Update_References(all_posts)
+			Update_References()
 		}
 	},
 }
