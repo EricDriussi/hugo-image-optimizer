@@ -25,7 +25,7 @@ var rootCmd = &cobra.Command{
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		if version {
-			fmt.Println("0.0.1")
+			fmt.Println("v1.0.0")
 		} else {
 			image_files := imageService.ImagesInIncludedDirs()
 			Rm_unused_images()

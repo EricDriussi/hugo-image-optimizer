@@ -14,6 +14,8 @@
 
 ## Install
 
+Either download the [latest binary](https://github.com/EricDriussi/hugo-image-optimizer/releases) and `go env -w GOBIN=$HOME/.local/bin && go install` or clone the repo and build it yourself:
+
 ```sh
 git clone git@github.com:EricDriussi/hugo-image-optimizer.git optimizer && cd optimizer && go build && go env -w GOBIN=$HOME/.local/bin && go install
 ```
