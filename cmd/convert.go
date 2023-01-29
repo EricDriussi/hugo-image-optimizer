@@ -12,7 +12,7 @@ func init() {
 
 var convertCmd = &cobra.Command{
 	Use:   "convert",
-	Short: "convert images to webp",
+	Short: "Convert images to webp",
 	Long:  "Converts all images (jpg, png, gif) to webp",
 	Run: func(cmd *cobra.Command, args []string) {
 		image_files := imageService.ImagesInIncludedDirs()

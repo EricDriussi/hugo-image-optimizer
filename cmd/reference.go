@@ -12,8 +12,8 @@ func init() {
 
 var referenceCmd = &cobra.Command{
 	Use:   "reference",
-	Short: "updates all image references",
-	Long:  "Updates all image references in MD for the .webp extension",
+	Short: "Updates all image references",
+	Long:  "Updates all image references in MD to .webp extension",
 	Run: func(cmd *cobra.Command, args []string) {
 		Update_References()
 	},

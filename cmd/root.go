@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	imageService "hugo-images/internal/image_service"
-	postReader "hugo-images/internal/post_reader_service"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -28,9 +27,8 @@ var rootCmd = &cobra.Command{
 		if version {
 			fmt.Println("0.0.1")
 		} else {
-			all_posts := postReader.All_posts_as_bytes()
 			image_files := imageService.ImagesInIncludedDirs()
-			Rm_unused_images(all_posts)
+			Rm_unused_images()
 			Convert_to_webp(image_files)
 			Update_References()
 		}
