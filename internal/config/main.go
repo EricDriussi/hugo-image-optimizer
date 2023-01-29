@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// TODO.Make conf file optional, default to curr values and ask for file if no match
 func Load() {
 	viper.AddConfigPath(".")
 	viper.SetConfigName("optimizer")
