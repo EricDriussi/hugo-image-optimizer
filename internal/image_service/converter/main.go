@@ -32,3 +32,11 @@ func Jpg(filepath string) error {
 
 	return cmd.Run()
 }
+
+func Jpeg(filepath string) error {
+	trimmed_filepath := strings.TrimSuffix(filepath, ".jpeg")
+	command := fmt.Sprintf("cwebp -q 50 %s.jpeg -o %s.webp", filepath, trimmed_filepath)
+	cmd := exec.Command(command)
+
+	return cmd.Run()
+}
