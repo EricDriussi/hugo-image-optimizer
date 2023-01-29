@@ -1,7 +1,6 @@
 package postReader
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -11,13 +10,9 @@ import (
 )
 
 func All_posts_as_bytes() []byte {
-	var (
-		working_dir = viper.GetString("dirs.project")
-		posts_dir   = viper.GetString("dirs.posts")
-	)
+	posts_path := viper.GetString("dirs.posts")
 
 	posts_stack := []byte{}
-	posts_path := fmt.Sprintf("%s%s", working_dir, posts_dir)
 	filepath.Walk(posts_path, func(filepath string, file os.FileInfo, error error) error {
 		if file.IsDir() {
 			return nil
@@ -31,12 +26,7 @@ func All_posts_as_bytes() []byte {
 }
 
 func Update_image_references() {
-	var (
-		working_dir = viper.GetString("dirs.project")
-		posts_dir   = viper.GetString("dirs.posts")
-	)
-
-	posts_path := fmt.Sprintf("%s%s", working_dir, posts_dir)
+	posts_path := viper.GetString("dirs.posts")
 
 	err := filepath.Walk(posts_path, change_extensions)
 	if err != nil {

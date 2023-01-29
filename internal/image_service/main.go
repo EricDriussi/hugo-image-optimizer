@@ -1,7 +1,6 @@
 package imageService
 
 import (
-	"fmt"
 	"optimize/internal/image_service/converter"
 	"optimize/internal/util"
 	"os"
@@ -12,14 +11,9 @@ import (
 )
 
 func Convert_images(list []string) error {
-	var (
-		working_dir = viper.GetString("dirs.project")
-		images_dir  = viper.GetString("dirs.images")
-	)
+	images_path := viper.GetString("dirs.images")
 
-	path := fmt.Sprintf("%s%s", working_dir, images_dir)
-
-	return filepath.Walk(path, func(filepath string, file os.FileInfo, error error) error {
+	return filepath.Walk(images_path, func(filepath string, file os.FileInfo, error error) error {
 		if file.IsDir() || filepath_is_excluded(filepath) {
 			return nil
 		}
@@ -53,14 +47,9 @@ func Convert_images(list []string) error {
 }
 
 func RM_images(list []string) error {
-	var (
-		working_dir = viper.GetString("dirs.project")
-		images_dir  = viper.GetString("dirs.images")
-	)
+	images_path := viper.GetString("dirs.images")
 
-	path := fmt.Sprintf("%s%s", working_dir, images_dir)
-
-	return filepath.Walk(path, func(filepath string, file os.FileInfo, error error) error {
+	return filepath.Walk(images_path, func(filepath string, file os.FileInfo, error error) error {
 		if file.IsDir() || filepath_is_excluded(filepath) {
 			return nil
 		}
@@ -73,15 +62,10 @@ func RM_images(list []string) error {
 }
 
 func ImagesInIncludedDirs() []string {
-	var (
-		working_dir = viper.GetString("dirs.project")
-		images_dir  = viper.GetString("dirs.images")
-	)
-
-	path := fmt.Sprintf("%s%s", working_dir, images_dir)
+	images_path := viper.GetString("dirs.images")
 	image_list := []string{}
 
-	read_images(path, &image_list)
+	read_images(images_path, &image_list)
 	return image_list
 }
 

@@ -13,8 +13,7 @@ import (
 func TestMain(m *testing.M) {
 	os.Chdir("../../")
 
-	viper.Set("dirs.project", "test/data/")
-	viper.Set("dirs.images", "images/")
+	viper.Set("dirs.images", "test/data/images/")
 	config.Load()
 
 	code := m.Run()
