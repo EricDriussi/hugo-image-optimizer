@@ -55,9 +55,9 @@ func change_extensions(path string, info os.FileInfo, err error) error {
 }
 
 func replace(content []byte) []byte {
-	gif := strings.ReplaceAll(string(content), ".gif)", ".webp)")
-	png := strings.ReplaceAll(string(gif), ".png)", ".webp)")
-	jpg := strings.ReplaceAll(string(png), ".jpg)", ".webp)")
-	jpeg := strings.ReplaceAll(string(jpg), ".jpeg)", ".webp)")
+	gif := strings.ReplaceAll(string(content), ".gif", ".webp")
+	png := strings.ReplaceAll(string(gif), ".png", ".webp")
+	jpg := strings.ReplaceAll(string(png), ".jpg", ".webp")
+	jpeg := strings.ReplaceAll(string(jpg), ".jpeg", ".webp")
 	return []byte(jpeg)
 }

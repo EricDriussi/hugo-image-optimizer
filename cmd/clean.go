@@ -25,9 +25,9 @@ var cleanCmd = &cobra.Command{
 func Rm_unused_images() {
 	fmt.Println("Removing unused images")
 	all_posts := postReader.All_posts_as_bytes()
-	image_references := filterService.MD_images_present_in(&all_posts)
+	image_references := filterService.Images_present_in(&all_posts)
 	image_files := imageService.ImagesInIncludedDirs()
-	unused_images := filterService.Unused_images(image_files, &image_references)
+	unused_images := filterService.Unused_image_paths(image_files, &image_references)
 	imageService.RM_images(unused_images)
 	fmt.Println("Done cleaning!")
 }
