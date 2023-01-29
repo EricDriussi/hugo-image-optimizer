@@ -8,7 +8,7 @@ import (
 
 func Load() {
 	viper.AddConfigPath(".")
-	viper.SetConfigName("conf")
+	viper.SetConfigName("optimizer")
 	viper.SetConfigType("ini")
 	err := viper.ReadInConfig()
 	if err != nil {
