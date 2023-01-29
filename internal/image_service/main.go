@@ -19,7 +19,7 @@ func Convert_images(list []string) error {
 		}
 		is_gif := strings.HasSuffix(file.Name(), ".gif")
 		is_png := strings.HasSuffix(file.Name(), ".png")
-		is_jpg := strings.HasSuffix(file.Name(), ".jgp")
+		is_jpg := strings.HasSuffix(file.Name(), ".jpg")
 		is_jpeg := strings.HasSuffix(file.Name(), ".jgep")
 
 		if is_gif {
