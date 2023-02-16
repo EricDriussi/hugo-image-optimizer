@@ -4,31 +4,40 @@ package converter
 
 import (
 	"fmt"
+	"log"
 	"os/exec"
 	"strings"
 )
 
-func Gif(filepath string) error {
+func Gif(filepath string) {
 	trimmed_filepath := strings.TrimSuffix(filepath, ".gif")
 	output_filepath := fmt.Sprintf("%s.webp", trimmed_filepath)
 	cmd := exec.Command("gif2webp", "-q", "50", "-mixed", filepath, "-o", output_filepath)
 
-	return cmd.Run()
+	if err := cmd.Run(); err != nil {
+		log.Fatal(fmt.Sprintf("Couldn't convert GIF: %s\n", filepath), err)
+	}
 }
 
-func Png(filepath string) error {
+func Png(filepath string) {
 	cmd := generic_convert_command(filepath, ".png")
-	return cmd.Run()
+	if err := cmd.Run(); err != nil {
+		log.Fatal(fmt.Sprintf("Couldn't convert PNG: %s\n", filepath), err)
+	}
 }
 
-func Jpg(filepath string) error {
+func Jpg(filepath string) {
 	cmd := generic_convert_command(filepath, ".jpg")
-	return cmd.Run()
+	if err := cmd.Run(); err != nil {
+		log.Fatal(fmt.Sprintf("Couldn't convert JPG: %s\n", filepath), err)
+	}
 }
 
-func Jpeg(filepath string) error {
+func Jpeg(filepath string) {
 	cmd := generic_convert_command(filepath, ".jpeg")
-	return cmd.Run()
+	if err := cmd.Run(); err != nil {
+		log.Fatal(fmt.Sprintf("Couldn't convert JPEG: %s\n", filepath), err)
+	}
 }
 
 func generic_convert_command(filepath string, ext string) *exec.Cmd {

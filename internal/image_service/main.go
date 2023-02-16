@@ -24,24 +24,31 @@ func Convert_images(list []string) error {
 		// TODO.Also handle webp if file size excedes X
 
 		if is_gif {
-			err := converter.Gif(filepath)
-			os.Remove(filepath)
-			return err
+			go func() {
+				converter.Gif(filepath)
+				os.Remove(filepath)
+			}()
 		}
+
 		if is_png {
-			err := converter.Png(filepath)
-			os.Remove(filepath)
-			return err
+			go func() {
+				converter.Png(filepath)
+				os.Remove(filepath)
+			}()
 		}
+
 		if is_jpg {
-			err := converter.Jpg(filepath)
-			os.Remove(filepath)
-			return err
+			go func() {
+				converter.Jpg(filepath)
+				os.Remove(filepath)
+			}()
 		}
+
 		if is_jpeg {
-			err := converter.Jpeg(filepath)
-			os.Remove(filepath)
-			return err
+			go func() {
+				converter.Jpeg(filepath)
+				os.Remove(filepath)
+			}()
 		}
 		return nil
 	})
