@@ -1,8 +1,8 @@
 package imageService
 
 import (
-	"optimize/internal/image_service/converter"
-	"optimize/internal/util"
+	"github.com/EricDriussi/hugo-image-optimizer/internal/image_service/converter"
+	"github.com/EricDriussi/hugo-image-optimizer/internal/util"
 	"os"
 	"path/filepath"
 	"strings"

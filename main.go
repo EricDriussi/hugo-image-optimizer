@@ -1,8 +1,8 @@
 package main
 
 import (
-	"optimize/cmd"
-	"optimize/internal/config"
+	"github.com/EricDriussi/hugo-image-optimizer/cmd"
+	"github.com/EricDriussi/hugo-image-optimizer/internal/config"
 )
 
 // TODO.refactor - modelling

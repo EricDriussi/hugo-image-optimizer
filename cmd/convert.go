@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	imageService "optimize/internal/image_service"
+	imageService "github.com/EricDriussi/hugo-image-optimizer/internal/image_service"
 
 	"github.com/spf13/cobra"
 )

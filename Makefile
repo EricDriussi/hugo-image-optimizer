@@ -8,6 +8,19 @@ help: ## This help menu
 	@grep -E '^\S+:.*?## .*$$' $(firstword $(MAKEFILE_LIST)) | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "%-30s %s\n", $$1, $$2}'
 
+.PHONY: compile
+compile: ## Compile binary
+	@go build
+
+.PHONY: setup
+setup: ## Setup dev env
+	@go install github.com/vektra/mockery/v2@latest
+	@go get
+
+.PHONY: mocks
+mocks: ## Create mocks
+	@mockery -r --case=snake --outpkg=mocks --output=test/mocks --name=PostRepository
+
 .PHONY: test
 test: ## Run tests
 ifdef FILE_PATH

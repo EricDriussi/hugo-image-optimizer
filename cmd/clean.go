@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	filterService "optimize/internal/filter_service"
-	imageService "optimize/internal/image_service"
-	postReader "optimize/internal/post_reader_service"
+	filterService "github.com/EricDriussi/hugo-image-optimizer/internal/filter_service"
+	imageService "github.com/EricDriussi/hugo-image-optimizer/internal/image_service"
+	postReader "github.com/EricDriussi/hugo-image-optimizer/internal/post_reader_service"
 
 	"github.com/spf13/cobra"
 )

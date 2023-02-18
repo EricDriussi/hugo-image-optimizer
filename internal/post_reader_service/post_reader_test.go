@@ -1,9 +1,9 @@
 package postReader_test
 
 import (
-	"optimize/internal/config"
-	postReader "optimize/internal/post_reader_service"
-	"optimize/internal/util"
+	"github.com/EricDriussi/hugo-image-optimizer/internal/config"
+	postReader "github.com/EricDriussi/hugo-image-optimizer/internal/post_reader_service"
+	"github.com/EricDriussi/hugo-image-optimizer/internal/util"
 	"os"
 	"testing"
 

@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	postReader "optimize/internal/post_reader_service"
+	postReader "github.com/EricDriussi/hugo-image-optimizer/internal/post_reader_service"
 
 	"github.com/spf13/cobra"
 )

@@ -1,9 +1,9 @@
 package imageService_test
 
 import (
-	"optimize/internal/config"
-	imageService "optimize/internal/image_service"
-	"optimize/internal/util"
+	"github.com/EricDriussi/hugo-image-optimizer/internal/config"
+	imageService "github.com/EricDriussi/hugo-image-optimizer/internal/image_service"
+	"github.com/EricDriussi/hugo-image-optimizer/internal/util"
 	"os"
 	"testing"
 
