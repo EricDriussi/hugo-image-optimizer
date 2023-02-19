@@ -3,7 +3,7 @@ package services
 import (
 	"errors"
 
-	"github.com/EricDriussi/hugo-image-optimizer/internal/domain"
+	"github.com/EricDriussi/hugo-image-optimizer/internal/domain/post"
 )
 
 type PostService struct {
