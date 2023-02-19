@@ -22,8 +22,8 @@ func Test_PostService(t *testing.T) {
 		postRepositoryMock.AssertExpectations(t)
 
 		assert.Len(t, loadedPosts, 1)
-		assert.Contains(t, loadedPosts[0].GetPath(), path)
-		assert.Contains(t, loadedPosts[0].GetFullContent(), content)
+		assert.Equal(t, path, loadedPosts[0].GetPath())
+		assert.Equal(t, content, loadedPosts[0].GetFullContent())
 		assert.NoError(t, err)
 	})
 
@@ -41,10 +41,10 @@ func Test_PostService(t *testing.T) {
 		postRepositoryMock.AssertExpectations(t)
 
 		assert.Len(t, loadedPosts, 2)
-		assert.Contains(t, loadedPosts[0].GetPath(), pathOne)
-		assert.Contains(t, loadedPosts[0].GetFullContent(), contentOne)
-		assert.Contains(t, loadedPosts[1].GetPath(), pathTwo)
-		assert.Contains(t, loadedPosts[1].GetFullContent(), contentTwo)
+		assert.Equal(t, pathOne, loadedPosts[0].GetPath())
+		assert.Equal(t, contentOne, loadedPosts[0].GetFullContent())
+		assert.Equal(t, pathTwo, loadedPosts[1].GetPath())
+		assert.Equal(t, contentTwo, loadedPosts[1].GetFullContent())
 		assert.NoError(t, err)
 	})
 
