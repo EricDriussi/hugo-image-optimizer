@@ -2,8 +2,9 @@ package services
 
 import (
 	"errors"
+	"fmt"
 
-	"github.com/EricDriussi/hugo-image-optimizer/internal/domain/post"
+	"github.com/EricDriussi/hugo-image-optimizer/internal/domain"
 )
 
 type PostService struct {
@@ -17,15 +18,19 @@ func NewPost(postRepository domain.PostRepository) PostService {
 }
 
 func (s PostService) LoadAll() ([]domain.Post, error) {
-	posts, err := s.postRepository.Load()
+	rawPosts, err := s.postRepository.Load()
 	if err != nil {
 		return nil, errors.New("Repository failed to load posts")
 	}
 
-	var domainPosts []domain.Post
-	for path, content := range posts {
-		domainPosts = append(domainPosts, domain.NewPost(path, content))
+	var posts []domain.Post
+	for path, content := range rawPosts {
+		post, err := domain.NewPost(path, content)
+		if err != nil {
+			return nil, errors.New(fmt.Sprintf("[ABORTING] Couldn't build post: %s", path))
+		}
+		posts = append(posts, post)
 	}
 
-	return domainPosts, nil
+	return posts, nil
 }
