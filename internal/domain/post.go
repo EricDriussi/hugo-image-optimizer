@@ -15,7 +15,6 @@ type Post struct {
 	filename post.FileName
 	path     string
 	content  post.PostContent
-	images   []byte
 }
 
 func NewPost(filepath string, rawContent []byte) (Post, error) {
@@ -30,7 +29,6 @@ func NewPost(filepath string, rawContent []byte) (Post, error) {
 		filename: name,
 		path:     filepath,
 		content:  content,
-		images:   content.Images(),
 	}
 
 	return newPost, nil
@@ -45,7 +43,7 @@ func (p Post) GetPath() string {
 }
 
 func (p Post) GetReferencedImages() string {
-	return string(p.images)
+	return string(p.content.Images())
 }
 
 func (p Post) GetFullContent() string {

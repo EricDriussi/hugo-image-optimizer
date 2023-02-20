@@ -15,26 +15,27 @@ func NewContent(content []byte) PostContent {
 }
 
 func extractImageReferences(content []byte) []byte {
-	md_images := mdReferences(content)
-	front_matter_images := frontMatterReferences(content)
+	md_images := getMdReferencesFrom(content)
+	front_matter_images := getFrontMatterReferencesFrom(content)
 	all_images := append(md_images, front_matter_images...)
-	return onlyImagePaths(all_images)
+	return filterImagePaths(all_images)
 }
 
-func onlyImagePaths(matches [][][]byte) []byte {
-	only_image_paths := []byte{}
-	for _, full_match := range matches {
-		only_image_paths = append(only_image_paths, full_match[1]...)
+func filterImagePaths(image_references [][][]byte) []byte {
+	only_paths := []byte{}
+	for _, ref := range image_references {
+		image_path := ref[1]
+		only_paths = append(only_paths, image_path...)
 	}
-	return only_image_paths
+	return only_paths
 }
 
-func mdReferences(text []byte) [][][]byte {
+func getMdReferencesFrom(text []byte) [][][]byte {
 	md_regex := regexp.MustCompile("!\\[.*\\]\\((.*\\.(jpg|png|jpeg|gif|webp))\\)")
 	return md_regex.FindAllSubmatch(text, -1)
 }
 
-func frontMatterReferences(text []byte) [][][]byte {
+func getFrontMatterReferencesFrom(text []byte) [][][]byte {
 	front_matter_regex := regexp.MustCompile("(?m)^image: (.*\\.(jpg|png|jpeg|webp))$")
 	return front_matter_regex.FindAllSubmatch(text, -1)
 }
