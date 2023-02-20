@@ -2,7 +2,9 @@ package domain
 
 import "github.com/EricDriussi/hugo-image-optimizer/internal/domain/image"
 
-type ImageRepository interface{}
+type ImageRepository interface {
+	Load() ([]string, error)
+}
 
 type Image struct {
 	path      Path

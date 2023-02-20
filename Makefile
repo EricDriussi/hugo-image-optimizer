@@ -26,6 +26,7 @@ setup: ## Setup dev env
 .PHONY: mocks
 mocks: ## Create mocks
 	@mockery -r --case=snake --outpkg=mocks --output=test/mocks --name=PostRepository
+	@mockery -r --case=snake --outpkg=mocks --output=test/mocks --name=ImageRepository
 
 .PHONY: test
 test: ## Run tests
