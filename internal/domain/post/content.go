@@ -1,10 +1,12 @@
 package post
 
-import "regexp"
+import (
+	"regexp"
+)
 
 type PostContent struct {
 	full_content     []byte
-	image_references []byte
+	image_references [][]byte
 }
 
 func NewContent(content []byte) PostContent {
@@ -14,18 +16,18 @@ func NewContent(content []byte) PostContent {
 	}
 }
 
-func extractImageReferences(content []byte) []byte {
+func extractImageReferences(content []byte) [][]byte {
 	md_images := getMdReferencesFrom(content)
 	front_matter_images := getFrontMatterReferencesFrom(content)
 	all_images := append(md_images, front_matter_images...)
 	return filterImagePaths(all_images)
 }
 
-func filterImagePaths(image_references [][][]byte) []byte {
-	only_paths := []byte{}
+func filterImagePaths(image_references [][][]byte) [][]byte {
+	only_paths := [][]byte{}
 	for _, ref := range image_references {
 		image_path := ref[1]
-		only_paths = append(only_paths, image_path...)
+		only_paths = append(only_paths, image_path)
 	}
 	return only_paths
 }
@@ -44,6 +46,11 @@ func (c PostContent) Value() []byte {
 	return c.full_content
 }
 
-func (c PostContent) Images() []byte {
-	return c.image_references
+func (c PostContent) Images() []string {
+	var image_paths_as_strings []string
+	image_paths_as_bytes := c.image_references
+	for _, image_path := range image_paths_as_bytes {
+		image_paths_as_strings = append(image_paths_as_strings, string(image_path))
+	}
+	return image_paths_as_strings
 }
