@@ -6,11 +6,18 @@
 >
 > Removes all unused images, converts the rest (png, jpg and gifs) to a compressed .webp format and updates all references in your posts.
 
+## Use Case
+
+I often screw around with my blog, adding and changing images without much attention to size, weight or format.
+As a result, I end up with a bunch of unused images lying around and a less-than ideal performance.
+
+This takes care of these issues without me having to worry about any of it.
+
 ## Dependencies
 
 - `go`
-- `gif2webp`
-- `cwebp`
+- `[cwebp](https://developers.google.com/speed/webp/docs/cwebp)`
+- `[gif2webp](https://developers.google.com/speed/webp/docs/gif2webp)` (if GIFs need to be handled)
 
 ## Install
 
@@ -30,8 +37,6 @@ posts = content/posts/
 images = static/images/
 images_exclude = whoami donation
 ```
-
-<!--TODO. add compression config-->
 
 This tells the optimizer where your posts and images are located, as well as what subdirectories to ignore when optimizing images.
 

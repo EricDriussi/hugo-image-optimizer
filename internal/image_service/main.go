@@ -21,7 +21,6 @@ func Convert_images(list []string) error {
 		is_png := strings.HasSuffix(file.Name(), ".png")
 		is_jpg := strings.HasSuffix(file.Name(), ".jpg")
 		is_jpeg := strings.HasSuffix(file.Name(), ".jgep")
-		// TODO.Also handle webp if file size excedes X
 
 		if is_gif {
 			go func() {

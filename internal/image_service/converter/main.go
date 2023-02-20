@@ -1,7 +1,5 @@
 package converter
 
-// TODO.Native conversion
-
 import (
 	"fmt"
 	"log"
