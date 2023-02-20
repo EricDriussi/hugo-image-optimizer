@@ -33,6 +33,6 @@ func Test_PostDomain_Constructor(t *testing.T) {
 		assert.Equal(t, name, post.GetFilename())
 		assert.Equal(t, post_path, post.GetPath())
 		assert.Equal(t, content, post.GetFullContent())
-		assert.Equal(t, image_path, post.GetReferencedImages())
+		assert.Contains(t, post.GetReferencedImages(), image_path)
 	})
 }

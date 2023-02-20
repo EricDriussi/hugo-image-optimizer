@@ -42,8 +42,8 @@ func (p Post) GetPath() string {
 	return p.path
 }
 
-func (p Post) GetReferencedImages() string {
-	return string(p.content.Images())
+func (p Post) GetReferencedImages() []string {
+	return p.content.Images()
 }
 
 func (p Post) GetFullContent() string {
