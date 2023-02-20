@@ -30,7 +30,6 @@ func Test_PostDomain_Constructor(t *testing.T) {
 		post, err := domain.NewPost(post_path, []byte(content))
 
 		assert.NoError(t, err)
-		assert.Equal(t, name, post.GetFilename())
 		assert.Equal(t, post_path, post.GetPath())
 		assert.Equal(t, content, post.GetFullContent())
 		assert.Contains(t, post.GetReferencedImages(), image_path)

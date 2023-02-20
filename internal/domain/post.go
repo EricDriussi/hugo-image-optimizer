@@ -1,9 +1,6 @@
 package domain
 
 import (
-	"errors"
-	"fmt"
-
 	"github.com/EricDriussi/hugo-image-optimizer/internal/domain/post"
 )
 
@@ -12,34 +9,27 @@ type PostRepository interface {
 }
 
 type Post struct {
-	filename post.FileName
-	path     string
-	content  post.PostContent
+	path    post.Path
+	content post.PostContent
 }
 
 func NewPost(filepath string, rawContent []byte) (Post, error) {
-	name, err := post.NewName(filepath)
+	path, err := post.NewPath(filepath)
 	if err != nil {
-		return Post{}, errors.New(fmt.Sprintf("Invalid filepath: %s", filepath))
+		return Post{}, err
 	}
-
 	content := post.NewContent(rawContent)
 
 	newPost := Post{
-		filename: name,
-		path:     filepath,
-		content:  content,
+		path:    path,
+		content: content,
 	}
 
 	return newPost, nil
 }
 
-func (p Post) GetFilename() string {
-	return p.filename.Value()
-}
-
 func (p Post) GetPath() string {
-	return p.path
+	return p.path.Value()
 }
 
 func (p Post) GetReferencedImages() []string {
