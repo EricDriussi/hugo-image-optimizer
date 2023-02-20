@@ -9,12 +9,12 @@ type PostRepository interface {
 }
 
 type Post struct {
-	path    post.Path
+	path    Path
 	content post.PostContent
 }
 
 func NewPost(filepath string, rawContent []byte) (Post, error) {
-	path, err := post.NewPath(filepath)
+	path, err := NewPath(filepath)
 	if err != nil {
 		return Post{}, err
 	}
