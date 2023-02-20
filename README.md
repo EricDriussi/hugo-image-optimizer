@@ -21,10 +21,10 @@ This takes care of these issues without me having to worry about any of it.
 
 ## Install
 
-Either download the [latest binary](https://github.com/EricDriussi/hugo-image-optimizer/releases) and `go env -w GOBIN=$HOME/.local/bin && go install` or clone the repo and build it yourself:
+Either download the [latest binary](https://github.com/EricDriussi/hugo-image-optimizer/releases) and add it to your `$PATH` or clone the repo and install it yourself:
 
 ```sh
-git clone git@github.com:EricDriussi/hugo-image-optimizer.git optimizer && cd optimizer && go build && go env -w GOBIN=$HOME/.local/bin && go install
+git clone git@github.com:EricDriussi/hugo-image-optimizer.git optimizer && cd optimizer && make install
 ```
 
 ## Config
