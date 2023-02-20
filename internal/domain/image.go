@@ -1,9 +1,15 @@
 package domain
 
-import "github.com/EricDriussi/hugo-image-optimizer/internal/domain/image"
+import (
+	"path"
+	"strings"
+
+	"github.com/EricDriussi/hugo-image-optimizer/internal/domain/image"
+)
 
 type ImageRepository interface {
 	Load() ([]string, error)
+	Delete(Image) error
 }
 
 type Image struct {
@@ -26,6 +32,16 @@ func NewImage(filepath string) (Image, error) {
 		path:      path,
 		extension: extension,
 	}, nil
+}
+
+func (i Image) IsPresentIn(list_of_references []string) bool {
+	for _, ref := range list_of_references {
+		cleanRef := path.Clean("/" + ref)
+		if strings.Contains(i.GetPath(), cleanRef) {
+			return true
+		}
+	}
+	return false
 }
 
 func (i Image) GetExtension() string {

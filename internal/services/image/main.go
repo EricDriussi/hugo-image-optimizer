@@ -16,6 +16,22 @@ func NewImage(imageRepository domain.ImageRepository) ImageService {
 	}
 }
 
+func (s ImageService) RemoveAllExcept(referenced_images []string) error {
+	image_files, loadErr := s.Load()
+	if loadErr != nil {
+		return loadErr
+	}
+
+	for _, image := range image_files {
+		isUnused := !image.IsPresentIn(referenced_images)
+		if isUnused {
+			s.imageRepository.Delete(image)
+		}
+	}
+
+	return nil
+}
+
 func (s ImageService) Load() ([]domain.Image, error) {
 	rawImages, err := s.imageRepository.Load()
 	if err != nil {
