@@ -22,11 +22,11 @@ func (s ImageService) Load() ([]domain.Image, error) {
 		return nil, errors.New("Repository failed to load images")
 	}
 
-	images := buildImagesIgnoringInvalid(rawImages)
+	images := s.buildImagesIgnoringInvalid(rawImages)
 	return images, nil
 }
 
-func buildImagesIgnoringInvalid(rawImages []string) []domain.Image {
+func (s ImageService) buildImagesIgnoringInvalid(rawImages []string) []domain.Image {
 	var images []domain.Image
 	for _, path := range rawImages {
 		image, err := domain.NewImage(path)

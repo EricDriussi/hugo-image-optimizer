@@ -17,11 +17,11 @@ func NewPost(posts_dir string) fsrepo {
 
 func (r fsrepo) Load() (map[string][]byte, error) {
 	posts := map[string][]byte{}
-	err := filepath.Walk(r.posts_dir, loadPostsInto(posts))
+	err := filepath.Walk(r.posts_dir, r.loadPostsInto(posts))
 	return posts, err
 }
 
-func loadPostsInto(posts map[string][]byte) filepath.WalkFunc {
+func (r fsrepo) loadPostsInto(posts map[string][]byte) filepath.WalkFunc {
 	return func(filepath string, file os.FileInfo, error error) error {
 		if error != nil {
 			return error
