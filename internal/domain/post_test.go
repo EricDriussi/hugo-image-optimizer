@@ -20,7 +20,7 @@ func Test_PostDomain_Constructor(t *testing.T) {
 		name := "aRandomName.md"
 		post_path := fmt.Sprintf("a/random/path/%s", name)
 
-		image_path := "../path/src2.png"
+		image_path := "../path/src.png"
 		image_reference := fmt.Sprintf("![image](%s)", image_path)
 		content := fmt.Sprintf(`line 1
 					line %s 2

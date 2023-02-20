@@ -17,7 +17,20 @@ func NewPost(postRepository domain.PostRepository) PostService {
 	}
 }
 
-func (s PostService) LoadAll() ([]domain.Post, error) {
+func (s PostService) GetImagesInPosts() ([]string, error) {
+	all_posts, err := s.loadPosts()
+	var images []string
+	for _, post := range all_posts {
+		images = append(images, post.GetReferencedImages())
+	}
+	return images, err
+}
+
+func (s PostService) Load() ([]domain.Post, error) {
+	return s.loadPosts()
+}
+
+func (s PostService) loadPosts() ([]domain.Post, error) {
 	rawPosts, err := s.postRepository.Load()
 	if err != nil {
 		return nil, errors.New("Repository failed to load posts")
