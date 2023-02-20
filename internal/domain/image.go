@@ -9,7 +9,6 @@ type Image struct {
 	extension image.Extension
 }
 
-// TODO.add test!
 func NewImage(filepath string) (Image, error) {
 	path, err := NewPath(filepath)
 	if err != nil {
@@ -25,4 +24,12 @@ func NewImage(filepath string) (Image, error) {
 		path:      path,
 		extension: extension,
 	}, nil
+}
+
+func (i Image) GetExtension() string {
+	return i.extension.Value()
+}
+
+func (i Image) GetPath() string {
+	return i.path.Value()
 }
