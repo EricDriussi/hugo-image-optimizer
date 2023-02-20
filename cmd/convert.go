@@ -2,14 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"log"
-
 	imageService "github.com/EricDriussi/hugo-image-optimizer/internal/image_service"
-	filesystemrepo "github.com/EricDriussi/hugo-image-optimizer/internal/infrastructure/repos/filesystem_repo/post"
-	services "github.com/EricDriussi/hugo-image-optimizer/internal/services/post"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 func init() {
@@ -21,14 +16,8 @@ var convertCmd = &cobra.Command{
 	Short: "Convert images to webp",
 	Long:  "Converts all images (jpg, png, gif) to webp",
 	Run: func(cmd *cobra.Command, args []string) {
-		posts_path := viper.GetString("dirs.posts")
-		postRepo := filesystemrepo.NewPost(posts_path)
-		postService := services.NewPost(postRepo)
-		all_image_references, err := postService.GetImagesInPosts()
-		if err != nil {
-			log.Fatal("Something went wrong: ", err)
-		}
-		Convert_to_webp(all_image_references)
+		image_files := imageService.ImagesInIncludedDirs()
+		Convert_to_webp(image_files)
 	},
 }
 

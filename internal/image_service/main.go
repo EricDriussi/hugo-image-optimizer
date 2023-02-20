@@ -1,12 +1,11 @@
 package imageService
 
 import (
+	"github.com/EricDriussi/hugo-image-optimizer/internal/image_service/converter"
+	"github.com/EricDriussi/hugo-image-optimizer/internal/util"
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/EricDriussi/hugo-image-optimizer/internal/image_service/converter"
-	"github.com/EricDriussi/hugo-image-optimizer/internal/util"
 
 	"github.com/spf13/viper"
 )
@@ -66,6 +65,24 @@ func RM_images(list []string) error {
 			return nil
 		}
 		return os.Remove(filepath)
+	})
+}
+
+func ImagesInIncludedDirs() []string {
+	images_path := viper.GetString("dirs.images")
+	image_list := []string{}
+
+	read_images(images_path, &image_list)
+	return image_list
+}
+
+func read_images(path string, list *[]string) error {
+	return filepath.Walk(path, func(filepath string, file os.FileInfo, error error) error {
+		if file.IsDir() || filepath_is_excluded(filepath) {
+			return nil
+		}
+		*list = append(*list, file.Name())
+		return nil
 	})
 }
 
