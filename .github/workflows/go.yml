@@ -1,26 +1,32 @@
-name: Go
+name: Build and Test
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
-
-  build:
+  main:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
 
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.19
+      - name: Checkout commit
+        uses: actions/checkout@v3
 
-    - name: Build
-      run: go build -v ./...
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
 
-    - name: Test
-      run: make test
-      
+      - name: Compile Binary
+        run: make compile
+
+      - name: Setup Dependencies
+        run: make setup
+
+      - name: Create Mocks
+        run: make mocks
+
+      - name: Run tests
+        run: go test -v ./...
