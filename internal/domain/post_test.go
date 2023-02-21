@@ -17,21 +17,36 @@ func Test_PostDomain_Constructor(t *testing.T) {
 	})
 
 	t.Run("builds as expected with no errors", func(t *testing.T) {
-		name := "aRandomName.md"
-		post_path := fmt.Sprintf("a/random/path/%s", name)
+		path := "a/random/path/filename.md"
+		content := []byte("some content")
 
-		image_path := "/path/src.png"
-		image_reference := fmt.Sprintf("![image](..%s)", image_path)
-		content := fmt.Sprintf(`line 1
-					line %s 2
-					line 4`,
-			image_reference)
-
-		post, err := domain.NewPost(post_path, []byte(content))
+		post, err := domain.NewPost(path, content)
 
 		assert.NoError(t, err)
-		assert.Equal(t, post_path, post.GetPath())
-		assert.Equal(t, content, post.GetFullContent())
+		assert.Equal(t, path, post.GetPath())
+		assert.Equal(t, string(content), post.GetFullContent())
+	})
+
+	t.Run("cleans image references", func(t *testing.T) {
+		path := "a/random/path/filename.md"
+
+		image_path := "/path/src.png"
+		image_reference := fmt.Sprintf("![image](../.././%s)", image_path)
+		content := contentWithImage(image_reference)
+
+		post, err := domain.NewPost(path, content)
+
+		assert.NoError(t, err)
+		assert.Equal(t, path, post.GetPath())
+		assert.Equal(t, string(content), post.GetFullContent())
 		assert.Contains(t, post.GetCleanImageReferences(), image_path)
 	})
+}
+
+func contentWithImage(reference string) []byte {
+	content := fmt.Sprintf(`line 1
+					line %s 2
+					line 4`,
+		reference)
+	return []byte(content)
 }
