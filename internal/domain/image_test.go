@@ -40,10 +40,7 @@ func Test_Image(t *testing.T) {
 		non_matching_reference := fmt.Sprintf("/irrelevant/path/%s", filename)
 		image_references := []string{matching_reference, non_matching_reference}
 
-		present := image.IsPresentIn(image_references)
-		assert.True(t, present)
-
-		non_present := !image.IsPresentIn([]string{non_matching_reference})
-		assert.True(t, non_present)
+		assert.False(t, image.IsNotPresentIn(image_references))
+		assert.True(t, image.IsNotPresentIn([]string{non_matching_reference}))
 	})
 }

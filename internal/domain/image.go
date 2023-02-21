@@ -33,13 +33,13 @@ func NewImage(filepath string) (Image, error) {
 	}, nil
 }
 
-func (i Image) IsPresentIn(list_of_references []string) bool {
+func (i Image) IsNotPresentIn(list_of_references []string) bool {
 	for _, ref := range list_of_references {
 		if strings.Contains(i.GetPath(), ref) {
-			return true
+			return false
 		}
 	}
-	return false
+	return true
 }
 
 func (i Image) GetExtension() string {
