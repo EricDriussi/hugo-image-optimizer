@@ -11,7 +11,6 @@ import (
 func Test_Content(t *testing.T) {
 	t.Run("extracts the image references", func(t *testing.T) {
 		t.Run("from the content", func(t *testing.T) {
-			t.Skip()
 			image_path := "../path/src.png"
 			image_reference := fmt.Sprintf("![image](%s)", image_path)
 			rawContent := fmt.Sprintf(`line 1
@@ -21,11 +20,10 @@ func Test_Content(t *testing.T) {
 				image_reference)
 
 			content := post.NewContent([]byte(rawContent))
-			assert.Equal(t, []byte(image_path), content.Images())
+			assert.Equal(t, []string{image_path}, content.Images())
 		})
 
 		t.Run("from the front matter", func(t *testing.T) {
-			t.Skip()
 			image_path := "/path/src.png"
 
 			image_reference := fmt.Sprintf("image: %s", image_path)
@@ -35,7 +33,7 @@ func Test_Content(t *testing.T) {
 					line 2`,
 				image_reference)
 			content := post.NewContent([]byte(rawContent))
-			assert.Equal(t, []byte(image_path), content.Images())
+			assert.Equal(t, []string{image_path}, content.Images())
 		})
 
 		t.Run("from both front matter and content", func(t *testing.T) {
