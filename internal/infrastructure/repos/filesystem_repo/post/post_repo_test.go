@@ -10,9 +10,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_PostRepository_Load(t *testing.T) {
-	setCWDToProjectRoot()
+func TestMain(m *testing.M) {
+	setup()
+	code := m.Run()
+	shutdown()
+	os.Exit(code)
+}
 
+func Test_PostRepository_Load(t *testing.T) {
 	t.Run("Loads all posts if directory exists", func(t *testing.T) {
 		repo := filesystemrepo.NewPost("test/data/posts/")
 
@@ -38,4 +43,19 @@ func setCWDToProjectRoot() {
 	if err := os.Chdir(project_root); err != nil {
 		panic(err)
 	}
+}
+
+func setup() {
+	setCWDToProjectRoot()
+	os.MkdirAll("test/data/posts/subdir", os.ModePerm)
+	f1, _ := os.Create("test/data/posts/a_post.md")
+	defer f1.Close()
+	f2, _ := os.Create("test/data/posts/another_post.md")
+	defer f2.Close()
+	f3, _ := os.Create("test/data/posts/subdir/a_different_post.md")
+	defer f3.Close()
+}
+
+func shutdown() {
+	os.RemoveAll("test/data/posts")
 }
