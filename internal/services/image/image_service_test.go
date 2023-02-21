@@ -31,43 +31,45 @@ func Test_ImageService(t *testing.T) {
 		assert.NoError(t, service_err)
 	})
 
-	t.Run("Loads all images", func(t *testing.T) {
-		imageRepositoryMock := new(mocks.ImageRepository)
-		imageRepositoryMock.On("Load").Return(images, nil)
+	t.Run("Loads", func(t *testing.T) {
+		t.Run("all images", func(t *testing.T) {
+			imageRepositoryMock := new(mocks.ImageRepository)
+			imageRepositoryMock.On("Load").Return(images, nil)
 
-		imageService := services.NewImage(imageRepositoryMock)
-		loadedImages, err := imageService.Load()
-		imageRepositoryMock.AssertExpectations(t)
+			imageService := services.NewImage(imageRepositoryMock)
+			loadedImages, err := imageService.Load()
+			imageRepositoryMock.AssertExpectations(t)
 
-		assert.Len(t, loadedImages, 2)
-		assert.NoError(t, err)
-	})
+			assert.Len(t, loadedImages, 2)
+			assert.NoError(t, err)
+		})
 
-	t.Run("Discards broken paths when loading", func(t *testing.T) {
-		images := []string{pathOne, "borked"}
-		imageRepositoryMock := new(mocks.ImageRepository)
-		imageRepositoryMock.On("Load").Return(images, nil)
+		t.Run("discarding broken paths", func(t *testing.T) {
+			images := []string{pathOne, "borked"}
+			imageRepositoryMock := new(mocks.ImageRepository)
+			imageRepositoryMock.On("Load").Return(images, nil)
 
-		imageService := services.NewImage(imageRepositoryMock)
-		loadedImages, err := imageService.Load()
-		imageRepositoryMock.AssertExpectations(t)
+			imageService := services.NewImage(imageRepositoryMock)
+			loadedImages, err := imageService.Load()
+			imageRepositoryMock.AssertExpectations(t)
 
-		assert.Len(t, loadedImages, 1)
-		assert.Equal(t, pathOne, loadedImages[0].GetPath())
-		assert.NoError(t, err)
-	})
+			assert.Len(t, loadedImages, 1)
+			assert.Equal(t, pathOne, loadedImages[0].GetPath())
+			assert.NoError(t, err)
+		})
 
-	t.Run("No partial loading if the repository erros out", func(t *testing.T) {
-		anError := errors.New("Something went wrong")
-		imageRepositoryMock := new(mocks.ImageRepository)
-		imageRepositoryMock.On("Load").Return(nil, anError)
+		t.Run("stopping if the repository erros out", func(t *testing.T) {
+			anError := errors.New("Something went wrong")
+			imageRepositoryMock := new(mocks.ImageRepository)
+			imageRepositoryMock.On("Load").Return(nil, anError)
 
-		imageService := services.NewImage(imageRepositoryMock)
-		loadedImages, err := imageService.Load()
-		imageRepositoryMock.AssertExpectations(t)
+			imageService := services.NewImage(imageRepositoryMock)
+			loadedImages, err := imageService.Load()
+			imageRepositoryMock.AssertExpectations(t)
 
-		assert.Nil(t, loadedImages)
-		assert.Error(t, err)
-		assert.ErrorContains(t, err, "Failed to load images")
+			assert.Nil(t, loadedImages)
+			assert.Error(t, err)
+			assert.ErrorContains(t, err, "Failed to load images")
+		})
 	})
 }
