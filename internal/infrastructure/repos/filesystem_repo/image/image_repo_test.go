@@ -26,7 +26,6 @@ func TestMain(m *testing.M) {
 }
 
 func Test_ImageRepository(t *testing.T) {
-	setCWDToProjectRoot()
 	images_test_dir := "test/data/images/"
 	images_test_excluded_dirs := []string{"whoami", "donation"}
 

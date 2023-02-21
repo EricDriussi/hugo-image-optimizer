@@ -23,10 +23,13 @@ jobs:
         run: make compile
 
       - name: Setup Dependencies
+        run: sudo apt-get install webp
+
+      - name: Setup Dev Dependencies
         run: make setup
 
       - name: Create Mocks
         run: make mocks
 
       - name: Run tests
-        run: go test -v ./...
+        run: go test ./...
