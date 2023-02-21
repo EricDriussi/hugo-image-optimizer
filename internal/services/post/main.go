@@ -21,7 +21,7 @@ func (s PostService) GetImagesInPosts() ([]string, error) {
 	all_posts, err := s.loadPosts()
 	var images []string
 	for _, post := range all_posts {
-		images = append(images, post.GetReferencedImages()...)
+		images = append(images, post.GetCleanImageReferences()...)
 	}
 	return images, err
 }

@@ -27,18 +27,16 @@ func Test_Image(t *testing.T) {
 		assert.Equal(t, filepath, image.GetPath())
 	})
 
-	t.Run("checks if is present in relative reference list", func(t *testing.T) {
+	t.Run("checks if is present in reference list", func(t *testing.T) {
 		filename := "valid.png"
 		image_path := strings.Join([]string{"path/with/", filename}, "")
 
 		image_ref1 := strings.Join([]string{"/with/", filename}, "")
-		image_ref2 := strings.Join([]string{"../with/", filename}, "")
-		image_ref3 := strings.Join([]string{"../../with/", filename}, "")
 
 		image, err := domain.NewImage(image_path)
 		assert.NoError(t, err)
 
-		present := image.IsPresentIn([]string{image_ref1, image_ref2, image_ref3})
+		present := image.IsPresentIn([]string{image_ref1})
 		assert.True(t, present)
 	})
 }

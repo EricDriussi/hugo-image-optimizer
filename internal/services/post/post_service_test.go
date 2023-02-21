@@ -12,16 +12,16 @@ import (
 
 func Test_PostService(t *testing.T) {
 	pathOne := "a/file/path/post.md"
-	image_pathOne := "../path/src.png"
-	image_referenceOne := fmt.Sprintf("![image](%s)", image_pathOne)
+	image_pathOne := "/path/src.png"
+	image_referenceOne := fmt.Sprintf("![image](..%s)", image_pathOne)
 	contentOne := fmt.Sprintf(`line 1
 					line %s 2
 					line 4`,
 		image_referenceOne)
 
 	pathTwo := "a/file/path/to/another/post.md"
-	image_pathTwo := "../path/src2.jpg"
-	image_referenceTwo := fmt.Sprintf("![image](%s)", image_pathTwo)
+	image_pathTwo := "/path/src2.jpg"
+	image_referenceTwo := fmt.Sprintf("![image](..%s)", image_pathTwo)
 	contentTwo := fmt.Sprintf(`line 1
 					%s
 					line 4`,

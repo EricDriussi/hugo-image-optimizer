@@ -20,8 +20,8 @@ func Test_PostDomain_Constructor(t *testing.T) {
 		name := "aRandomName.md"
 		post_path := fmt.Sprintf("a/random/path/%s", name)
 
-		image_path := "../path/src.png"
-		image_reference := fmt.Sprintf("![image](%s)", image_path)
+		image_path := "/path/src.png"
+		image_reference := fmt.Sprintf("![image](..%s)", image_path)
 		content := fmt.Sprintf(`line 1
 					line %s 2
 					line 4`,
@@ -32,6 +32,6 @@ func Test_PostDomain_Constructor(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, post_path, post.GetPath())
 		assert.Equal(t, content, post.GetFullContent())
-		assert.Contains(t, post.GetReferencedImages(), image_path)
+		assert.Contains(t, post.GetCleanImageReferences(), image_path)
 	})
 }

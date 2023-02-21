@@ -15,7 +15,7 @@ func Test_ImageService(t *testing.T) {
 	pathTwo := "a/file/path/to/another/image.jpg"
 
 	t.Run("Deletes unreferenced images", func(t *testing.T) {
-		image_reference := "../path/image.png"
+		image_reference := "/path/image.png"
 
 		domIma1, imaErr := domain.NewImage(pathTwo)
 		assert.NoError(t, imaErr)

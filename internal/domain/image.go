@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"path"
 	"strings"
 
 	"github.com/EricDriussi/hugo-image-optimizer/internal/domain/image"
@@ -36,8 +35,7 @@ func NewImage(filepath string) (Image, error) {
 
 func (i Image) IsPresentIn(list_of_references []string) bool {
 	for _, ref := range list_of_references {
-		cleanRef := path.Clean("/" + ref)
-		if strings.Contains(i.GetPath(), cleanRef) {
+		if strings.Contains(i.GetPath(), ref) {
 			return true
 		}
 	}
