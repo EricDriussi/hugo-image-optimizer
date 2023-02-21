@@ -31,7 +31,7 @@ func (r fsrepo) loadImagesInto(images_list *[]string) filepath.WalkFunc {
 		}
 
 		if file.IsDir() {
-			if contains(r.excluded_dirs, file.Name()) {
+			if r.isInExcludedList(file.Name()) {
 				return filepath.SkipDir
 			}
 			return nil
@@ -42,9 +42,9 @@ func (r fsrepo) loadImagesInto(images_list *[]string) filepath.WalkFunc {
 	}
 }
 
-func contains(slice []string, str string) bool {
-	for _, s := range slice {
-		if strings.Contains(s, str) {
+func (r fsrepo) isInExcludedList(dir string) bool {
+	for _, excluded_dir := range r.excluded_dirs {
+		if strings.Contains(excluded_dir, dir) {
 			return true
 		}
 	}

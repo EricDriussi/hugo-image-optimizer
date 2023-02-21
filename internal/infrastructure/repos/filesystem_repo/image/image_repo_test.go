@@ -12,9 +12,10 @@ import (
 
 func Test_ImageRepository_Load(t *testing.T) {
 	setCWDToProjectRoot()
+	validDir := "test/data/images/"
 
 	t.Run("Loads all images recursively if directory exists", func(t *testing.T) {
-		repo := filesystemrepo.NewImage("test/data/images/", []string{})
+		repo := filesystemrepo.NewImage(validDir, []string{})
 
 		loadedImages, err := repo.Load()
 
@@ -24,7 +25,7 @@ func Test_ImageRepository_Load(t *testing.T) {
 
 	t.Run("Doesn't load images from excluded directories", func(t *testing.T) {
 		excludedDirs := []string{"whoami", "donation"}
-		repo := filesystemrepo.NewImage("test/data/images/", excludedDirs)
+		repo := filesystemrepo.NewImage(validDir, excludedDirs)
 
 		loadedImages, err := repo.Load()
 
