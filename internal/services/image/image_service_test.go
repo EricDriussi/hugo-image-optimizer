@@ -68,6 +68,6 @@ func Test_ImageService(t *testing.T) {
 
 		assert.Nil(t, loadedImages)
 		assert.Error(t, err)
-		assert.ErrorContains(t, err, "Repository failed to load images")
+		assert.ErrorContains(t, err, "Failed to load images")
 	})
 }
