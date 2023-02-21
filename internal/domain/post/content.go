@@ -17,13 +17,13 @@ func NewContent(content []byte) PostContent {
 }
 
 func extractImageReferences(content []byte) [][]byte {
-	md_images := getMdReferencesFrom(content)
-	front_matter_images := getFrontMatterReferencesFrom(content)
+	md_images := getMdReferencesMatchesIn(content)
+	front_matter_images := getFrontMatterReferencesMatchesIn(content)
 	all_images := append(md_images, front_matter_images...)
-	return filterImagePaths(all_images)
+	return onlyImagePaths(all_images)
 }
 
-func filterImagePaths(image_references [][][]byte) [][]byte {
+func onlyImagePaths(image_references [][][]byte) [][]byte {
 	only_paths := [][]byte{}
 	for _, ref := range image_references {
 		image_path := ref[1]
@@ -32,25 +32,25 @@ func filterImagePaths(image_references [][][]byte) [][]byte {
 	return only_paths
 }
 
-func getMdReferencesFrom(text []byte) [][][]byte {
-	md_regex := regexp.MustCompile("!\\[.*\\]\\((.*\\.(jpg|png|jpeg|gif|webp))\\)")
+func getMdReferencesMatchesIn(text []byte) [][][]byte {
+	md_regex := regexp.MustCompile("!\\[.*\\]\\((.*\\.(jpg|png|jpeg|gif))\\)")
 	return md_regex.FindAllSubmatch(text, -1)
 }
 
-func getFrontMatterReferencesFrom(text []byte) [][][]byte {
-	front_matter_regex := regexp.MustCompile("(?m)^image: (.*\\.(jpg|png|jpeg|webp))$")
+func getFrontMatterReferencesMatchesIn(text []byte) [][][]byte {
+	front_matter_regex := regexp.MustCompile("(?m)^image: (.*\\.(jpg|png|jpeg))$")
 	return front_matter_regex.FindAllSubmatch(text, -1)
+}
+
+func (c PostContent) Images() []string {
+	var srting_paths []string
+	bytes_paths := c.image_references
+	for _, image_path := range bytes_paths {
+		srting_paths = append(srting_paths, string(image_path))
+	}
+	return srting_paths
 }
 
 func (c PostContent) Value() []byte {
 	return c.full_content
-}
-
-func (c PostContent) Images() []string {
-	var image_paths_as_strings []string
-	image_paths_as_bytes := c.image_references
-	for _, image_path := range image_paths_as_bytes {
-		image_paths_as_strings = append(image_paths_as_strings, string(image_path))
-	}
-	return image_paths_as_strings
 }

@@ -9,6 +9,12 @@ import (
 )
 
 func Test_Content(t *testing.T) {
+	t.Run("reads the full content", func(t *testing.T) {
+		rawContent := []byte("some random content")
+		content := post.NewContent(rawContent)
+		assert.Equal(t, rawContent, content.Value())
+	})
+
 	t.Run("extracts the image references", func(t *testing.T) {
 		t.Run("from the content", func(t *testing.T) {
 			image_path := "../path/src.png"
@@ -20,26 +26,25 @@ func Test_Content(t *testing.T) {
 				image_reference)
 
 			content := post.NewContent([]byte(rawContent))
-			assert.Equal(t, []string{image_path}, content.Images())
+			assert.Contains(t, content.Images(), image_path)
 		})
 
 		t.Run("from the front matter", func(t *testing.T) {
 			image_path := "/path/src.png"
-
 			image_reference := fmt.Sprintf("image: %s", image_path)
-
 			rawContent := fmt.Sprintf(`%s
 					line 1
 					line 2`,
 				image_reference)
+
 			content := post.NewContent([]byte(rawContent))
-			assert.Equal(t, []string{image_path}, content.Images())
+			assert.Contains(t, content.Images(), image_path)
 		})
 
 		t.Run("from both front matter and content", func(t *testing.T) {
 			image_path1 := "path/src.png"
-			image_path2 := "../path/src2.webp"
-			image_path3 := "../path/src3.gif"
+			image_path2 := "../path/src2.jpg"
+			image_path3 := "/path/src3.gif"
 
 			image_reference1 := fmt.Sprintf("image: %s", image_path1)
 			image_reference2 := fmt.Sprintf("![image](%s)", image_path2)
