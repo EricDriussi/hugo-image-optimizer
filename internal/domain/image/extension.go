@@ -21,15 +21,17 @@ func NewExtension(filepath string) (Extension, error) {
 
 func validateExtension(filepath string) (string, bool) {
 	extension := path.Ext(filepath)
-	if len(extension) == 0 {
-		return "", false
-	}
+	isValid := isNotEmpty(extension) && isSupported(extension)
+	return extension, isValid
+}
 
-	valid_extensions := regexp.MustCompile(".(jpg|png|jpeg|gif|webp)")
-	if !valid_extensions.Match([]byte(extension)) {
-		return "", false
-	}
-	return extension, true
+func isNotEmpty(ext string) bool {
+	return len(ext) > 0
+}
+
+func isSupported(ext string) bool {
+	valid_ext := regexp.MustCompile(".(jpg|png|jpeg|gif)")
+	return valid_ext.Match([]byte(ext))
 }
 
 func (n Extension) Value() string {

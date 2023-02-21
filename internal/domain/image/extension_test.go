@@ -10,11 +10,7 @@ import (
 
 func Test_Extension(t *testing.T) {
 	t.Run("handles all valid image extensions", func(t *testing.T) {
-		png := ".png"
-		jpg := ".jpg"
-		jpeg := ".jpeg"
-		gif := ".gif"
-		valid_extensions := []string{png, jpg, jpeg, gif}
+		valid_extensions := []string{".png", ".jpg", ".jpeg", ".gif"}
 
 		for _, ext := range valid_extensions {
 			filename := strings.Join([]string{"aName", ext}, "")
