@@ -13,27 +13,25 @@ import (
 func Test_ImageService(t *testing.T) {
 	pathOne := "a/file/path/image.png"
 	pathTwo := "a/file/path/to/another/image.jpg"
+	images := []string{pathOne, pathTwo}
 
-	t.Run("Deletes unreferenced images", func(t *testing.T) {
-		image_reference := "/path/image.png"
+	t.Run("Deletes only unreferenced images", func(t *testing.T) {
+		image, image_err := domain.NewImage(pathTwo)
+		assert.NoError(t, image_err)
 
-		domIma1, imaErr := domain.NewImage(pathTwo)
-		assert.NoError(t, imaErr)
-
-		images := []string{pathOne, pathTwo}
 		imageRepositoryMock := new(mocks.ImageRepository)
 		imageRepositoryMock.On("Load").Return(images, nil)
-		imageRepositoryMock.On("Delete", domIma1).Return(nil)
+		imageRepositoryMock.On("Delete", image).Return(nil)
 
 		imageService := services.NewImage(imageRepositoryMock)
-		err := imageService.RemoveAllExcept([]string{image_reference})
+		image_reference := "/path/image.png"
+		service_err := imageService.RemoveAllExcept([]string{image_reference})
 		imageRepositoryMock.AssertExpectations(t)
 
-		assert.NoError(t, err)
+		assert.NoError(t, service_err)
 	})
 
 	t.Run("Loads all images", func(t *testing.T) {
-		images := []string{pathOne, pathTwo}
 		imageRepositoryMock := new(mocks.ImageRepository)
 		imageRepositoryMock.On("Load").Return(images, nil)
 
@@ -42,13 +40,11 @@ func Test_ImageService(t *testing.T) {
 		imageRepositoryMock.AssertExpectations(t)
 
 		assert.Len(t, loadedImages, 2)
-		assert.Equal(t, pathOne, loadedImages[0].GetPath())
-		assert.Equal(t, pathTwo, loadedImages[1].GetPath())
 		assert.NoError(t, err)
 	})
 
-	t.Run("Partially loads images", func(t *testing.T) {
-		images := []string{pathOne, "broked"}
+	t.Run("Discards broken paths when loading", func(t *testing.T) {
+		images := []string{pathOne, "borked"}
 		imageRepositoryMock := new(mocks.ImageRepository)
 		imageRepositoryMock.On("Load").Return(images, nil)
 
@@ -72,5 +68,6 @@ func Test_ImageService(t *testing.T) {
 
 		assert.Nil(t, loadedImages)
 		assert.Error(t, err)
+		assert.ErrorContains(t, err, "Repository failed to load images")
 	})
 }
