@@ -1,7 +1,10 @@
 package filesystemrepo
 
 import (
+	"errors"
+	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -18,6 +21,22 @@ func NewImage(images_dir string, excluded []string) fsrepo {
 		images_dir:    images_dir,
 		excluded_dirs: excluded,
 	}
+}
+
+func (r fsrepo) ConvertToWebp(image domain.Image) error {
+	cmd := generic_convert_command(image.GetPath(), image.GetExtension())
+	if err := cmd.Run(); err != nil {
+		return errors.New(fmt.Sprintf("Couldn't convert image: %s\n", image.GetPath()))
+	}
+	return nil
+}
+
+func generic_convert_command(filepath string, ext string) *exec.Cmd {
+	filepath_without_ext := strings.TrimSuffix(filepath, ext)
+	webp_filepath := fmt.Sprintf("%s.webp", filepath_without_ext)
+
+	cmd_params := []string{"-q", "50", filepath, "-o", webp_filepath}
+	return exec.Command("cwebp", cmd_params...)
 }
 
 func (r fsrepo) Delete(image domain.Image) error {
