@@ -2,11 +2,15 @@ package cmd
 
 import (
 	"fmt"
-	filterService "github.com/EricDriussi/hugo-image-optimizer/internal/filter_service"
-	imageService "github.com/EricDriussi/hugo-image-optimizer/internal/image_service"
-	postReader "github.com/EricDriussi/hugo-image-optimizer/internal/post_reader_service"
+	"log"
+
+	imRepo "github.com/EricDriussi/hugo-image-optimizer/internal/infrastructure/repos/filesystem_repo/image"
+	postRepo "github.com/EricDriussi/hugo-image-optimizer/internal/infrastructure/repos/filesystem_repo/post"
+	imSrv "github.com/EricDriussi/hugo-image-optimizer/internal/services/image"
+	postSrv "github.com/EricDriussi/hugo-image-optimizer/internal/services/post"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 func init() {
@@ -23,11 +27,29 @@ var cleanCmd = &cobra.Command{
 }
 
 func Rm_unused_images() {
-	fmt.Println("Removing unused images")
-	all_posts := postReader.All_posts_as_bytes()
-	image_references := filterService.Images_present_in(&all_posts)
-	image_files := imageService.ImagesInIncludedDirs()
-	unused_images := filterService.Unused_image_paths(image_files, &image_references)
-	imageService.RM_images(unused_images)
-	fmt.Println("Done cleaning!")
+	imageReferences := getReferences()
+	imageService := getImageService()
+
+	if err := imageService.RemoveAllExcept(imageReferences); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Unused images have been removed")
+}
+
+func getReferences() []string {
+	posts_path := viper.GetString("dirs.posts")
+	postRepo := postRepo.NewPost(posts_path)
+	postService := postSrv.NewPost(postRepo)
+	imageReferences, err := postService.GetAllReferencedImagePaths()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return imageReferences
+}
+
+func getImageService() imSrv.ImageService {
+	images_path := viper.GetString("dirs.images")
+	excluded_images_path := viper.GetStringSlice("dirs.images_exclude")
+	imageRepo := imRepo.NewImage(images_path, excluded_images_path)
+	return imSrv.NewImage(imageRepo)
 }
