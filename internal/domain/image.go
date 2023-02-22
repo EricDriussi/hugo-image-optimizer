@@ -47,6 +47,10 @@ func (i Image) GetExtension() string {
 	return i.extension.Value()
 }
 
+func (i Image) IsGif() bool {
+	return strings.EqualFold(i.extension.Value(), ".gif")
+}
+
 // TODO. remove ext?
 func (i Image) GetPath() string {
 	return i.path.Value()

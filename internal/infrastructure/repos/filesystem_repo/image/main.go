@@ -24,6 +24,30 @@ func NewImage(images_dir string, excluded []string) fsrepo {
 }
 
 func (r fsrepo) ConvertToWebp(image domain.Image) error {
+	if image.IsGif() {
+		return gif(image)
+	} else {
+		return generic(image)
+	}
+}
+
+func gif(image domain.Image) error {
+	cmd := gif_convert_command(image.GetPath(), image.GetExtension())
+	if err := cmd.Run(); err != nil {
+		return errors.New(fmt.Sprintf("Couldn't convert gif: %s\n", image.GetPath()))
+	}
+	return nil
+}
+
+func gif_convert_command(filepath string, ext string) *exec.Cmd {
+	filepath_without_ext := strings.TrimSuffix(filepath, ext)
+	webp_filepath := fmt.Sprintf("%s.webp", filepath_without_ext)
+
+	cmd_params := []string{"-q", "50", "-mixed", filepath, "-o", webp_filepath}
+	return exec.Command("gif2webp", cmd_params...)
+}
+
+func generic(image domain.Image) error {
 	cmd := generic_convert_command(image.GetPath(), image.GetExtension())
 	if err := cmd.Run(); err != nil {
 		return errors.New(fmt.Sprintf("Couldn't convert image: %s\n", image.GetPath()))

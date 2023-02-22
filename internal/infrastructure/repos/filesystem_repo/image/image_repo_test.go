@@ -92,16 +92,16 @@ func imageRepoTests(t *testing.T) {
 			repo := filesystemrepo.NewImage(images_test_dir, images_test_excluded_dirs)
 
 			filename := fmt.Sprintf("%s%s", images_test_dir, "an_image")
-			pngFile := fmt.Sprintf("%s%s", filename, ".png")
-			webpFile := fmt.Sprintf("%s%s", filename, ".webp")
+			pngFilename := fmt.Sprintf("%s%s", filename, ".png")
+			webpFilename := fmt.Sprintf("%s%s", filename, ".webp")
 
-			image, image_err := domain.NewImage(pngFile)
+			image, image_err := domain.NewImage(pngFilename)
 			assert.NoError(t, image_err)
 
 			repo_err := repo.ConvertToWebp(image)
 			assert.NoError(t, repo_err)
 
-			rm_err := os.Remove(webpFile)
+			rm_err := os.Remove(webpFilename)
 			assert.NoError(t, rm_err)
 		})
 
@@ -109,20 +109,34 @@ func imageRepoTests(t *testing.T) {
 			repo := filesystemrepo.NewImage(images_test_dir, images_test_excluded_dirs)
 
 			filename := fmt.Sprintf("%s%s", images_test_dir, "another_image")
-			jpegFile := fmt.Sprintf("%s%s", filename, ".jpeg")
-			webpFile := fmt.Sprintf("%s%s", filename, ".webp")
+			jpegFilename := fmt.Sprintf("%s%s", filename, ".jpeg")
+			webpFilename := fmt.Sprintf("%s%s", filename, ".webp")
 
-			image, image_err := domain.NewImage(jpegFile)
+			image, image_err := domain.NewImage(jpegFilename)
 			assert.NoError(t, image_err)
 
 			repo_err := repo.ConvertToWebp(image)
 			assert.NoError(t, repo_err)
 
-			rm_err := os.Remove(webpFile)
+			rm_err := os.Remove(webpFilename)
 			assert.NoError(t, rm_err)
 		})
 
-		// TODO
-		t.Run("Converts a GIF to webp", func(t *testing.T) {})
+		t.Run("Converts a GIF to webp", func(t *testing.T) {
+			repo := filesystemrepo.NewImage(images_test_dir, images_test_excluded_dirs)
+
+			filename := fmt.Sprintf("%s%s", images_test_dir, "a_gif")
+			gifFilename := fmt.Sprintf("%s%s", filename, ".gif")
+			webpFilename := fmt.Sprintf("%s%s", filename, ".webp")
+
+			image, image_err := domain.NewImage(gifFilename)
+			assert.NoError(t, image_err)
+
+			repo_err := repo.ConvertToWebp(image)
+			assert.NoError(t, repo_err)
+
+			rm_err := os.Remove(webpFilename)
+			assert.NoError(t, rm_err)
+		})
 	})
 }
