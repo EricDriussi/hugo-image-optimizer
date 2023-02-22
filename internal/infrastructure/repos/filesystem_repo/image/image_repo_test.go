@@ -88,6 +88,27 @@ func imageRepoTests(t *testing.T) {
 	})
 
 	t.Run("#CONVERT", func(t *testing.T) {
+		t.Run("Doesn't convert images from excluded directories", func(t *testing.T) {
+			repo := filesystemrepo.NewImage(images_test_dir, images_test_excluded_dirs)
+
+			filename := fmt.Sprintf("%s%s%s", images_test_dir, images_test_excluded_dirs[0],
+				"/avatar")
+			jpegFilename := fmt.Sprintf("%s%s", filename, ".jpg")
+			webpFilename := fmt.Sprintf("%s%s", filename, ".webp")
+			image, image_err := domain.NewImage(jpegFilename)
+			assert.NoError(t, image_err)
+
+			f, create_err := os.Create(filename)
+			defer f.Close()
+			assert.NoError(t, create_err)
+
+			repo_err := repo.ConvertToWebp(image)
+			assert.NoError(t, repo_err)
+
+			rm_err := os.Remove(webpFilename)
+			assert.Error(t, rm_err)
+		})
+
 		t.Run("Converts a PNG image to webp", func(t *testing.T) {
 			repo := filesystemrepo.NewImage(images_test_dir, images_test_excluded_dirs)
 

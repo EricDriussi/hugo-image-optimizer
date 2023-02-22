@@ -76,19 +76,34 @@ func (r fsrepo) isInExcludedList(dir string) bool {
 }
 
 func (r fsrepo) ConvertToWebp(image domain.Image) error {
-	if image.IsGif() {
-		cmd := gif2webpCommandBuilder(image)
-		if err := cmd.Run(); err != nil {
-			return errors.New(fmt.Sprintf("Couldn't convert gif: %s\n", image.GetPath()))
+	return filepath.Walk(r.images_dir, func(path string, file os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if file.IsDir() {
+			if r.isInExcludedList(file.Name()) {
+				return filepath.SkipDir
+			}
+			return nil
+		}
+		if strings.Contains(path, image.GetPath()) {
+			if image.IsGif() {
+				cmd := gif2webpCommandBuilder(image)
+				if err := cmd.Run(); err != nil {
+					return errors.New(fmt.Sprintf("Couldn't convert gif: %s\n", image.GetPath()))
+				}
+				return nil
+			} else {
+				cmd := cwebpCommandBuilder(image)
+				if err := cmd.Run(); err != nil {
+					return errors.New(fmt.Sprintf("Couldn't convert image: %s\n", image.GetPath()))
+				}
+				return nil
+			}
 		}
 		return nil
-	} else {
-		cmd := cwebpCommandBuilder(image)
-		if err := cmd.Run(); err != nil {
-			return errors.New(fmt.Sprintf("Couldn't convert image: %s\n", image.GetPath()))
-		}
-		return nil
-	}
+	})
 }
 
 func gif2webpCommandBuilder(image domain.Image) *exec.Cmd {
