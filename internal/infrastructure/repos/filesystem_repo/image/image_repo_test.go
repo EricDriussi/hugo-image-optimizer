@@ -1,16 +1,8 @@
 package filesystemrepo_test
 
 import (
-	"crypto/rand"
 	"fmt"
-	"image"
-	"image/gif"
-	"image/jpeg"
-	"image/png"
-	"log"
 	"os"
-	"path"
-	"runtime"
 	"testing"
 
 	"github.com/EricDriussi/hugo-image-optimizer/internal/domain"
@@ -18,14 +10,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMain(m *testing.M) {
-	setup()
-	code := m.Run()
-	shutdown()
-	os.Exit(code)
+func Test_ImageRepository(t *testing.T) {
+	runWithFixtures(t, func() {
+		imageRepoTests(t)
+	})
 }
 
-func Test_ImageRepository(t *testing.T) {
+func imageRepoTests(t *testing.T) {
 	images_test_dir := "test/data/images/"
 	images_test_excluded_dirs := []string{"whoami", "donation"}
 
@@ -62,7 +53,7 @@ func Test_ImageRepository(t *testing.T) {
 		t.Run("Doesn't delete images from excluded directories", func(t *testing.T) {
 			repo := filesystemrepo.NewImage(images_test_dir, images_test_excluded_dirs)
 
-			filename := fmt.Sprintf("%s%s", images_test_excluded_dirs[0], "testFile.png")
+			filename := fmt.Sprintf("%s%s%s", images_test_dir, images_test_excluded_dirs[0], "/testFile.png")
 			image, image_err := domain.NewImage(filename)
 			assert.NoError(t, image_err)
 
@@ -134,68 +125,4 @@ func Test_ImageRepository(t *testing.T) {
 		// TODO
 		t.Run("Converts a GIF to webp", func(t *testing.T) {})
 	})
-}
-
-func setCWDToProjectRoot() {
-	_, filename, _, _ := runtime.Caller(0)
-	project_root := path.Join(path.Dir(filename), "../../../../..")
-	if err := os.Chdir(project_root); err != nil {
-		panic(err)
-	}
-}
-
-func setup() {
-	setCWDToProjectRoot()
-	os.MkdirAll("test/data/images/donation/subdir", os.ModePerm)
-	os.MkdirAll("test/data/images/whoami", os.ModePerm)
-	createDummyPng("test/data/images/an_image.png")
-	createDummyGif("test/data/images/a_gif.gif")
-	createDummyJpg("test/data/images/another_image.jpeg")
-	createDummyJpg("test/data/images/donation/subdir/ignore_me.jpg")
-	createDummyJpg("test/data/images/whoami/avatar.jpg")
-}
-
-func createDummyPng(filePath string) {
-	img := createRandomImage()
-	imgFile, err := os.Create(filePath)
-	defer imgFile.Close()
-	if err != nil {
-		log.Fatal("Cannot create test image:", err)
-	}
-	png.Encode(imgFile, img.SubImage(img.Rect))
-}
-
-func createDummyJpg(filePath string) {
-	img := createRandomImage()
-	imgFile, err := os.Create(filePath)
-	defer imgFile.Close()
-	if err != nil {
-		log.Fatal("Cannot create test image:", err)
-	}
-	jpeg.Encode(imgFile, img.SubImage(img.Rect), &jpeg.Options{})
-}
-
-func createDummyGif(filePath string) {
-	img := createRandomImage()
-	imgFile, err := os.Create(filePath)
-	defer imgFile.Close()
-	if err != nil {
-		log.Fatal("Cannot create test image:", err)
-	}
-	gif.Encode(imgFile, img.SubImage(img.Rect), &gif.Options{})
-}
-
-func createRandomImage() (created *image.NRGBA) {
-	rect := image.Rect(0, 0, 100, 100)
-	pix := make([]uint8, rect.Dx()*rect.Dy()*4)
-	rand.Read(pix)
-	return &image.NRGBA{
-		Pix:    pix,
-		Stride: rect.Dx() * 4,
-		Rect:   rect,
-	}
-}
-
-func shutdown() {
-	os.RemoveAll("test/data/images")
 }
