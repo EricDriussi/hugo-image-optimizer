@@ -16,8 +16,8 @@ This takes care of these issues without me having to worry about any of it.
 ## Dependencies
 
 - `go`
-- `[cwebp](https://developers.google.com/speed/webp/docs/cwebp)`
-- `[gif2webp](https://developers.google.com/speed/webp/docs/gif2webp)` (if GIFs need to be handled)
+- [`cwebp`](https://developers.google.com/speed/webp/docs/cwebp)
+- [`gif2webp`](https://developers.google.com/speed/webp/docs/gif2webp) (if GIFs need to be handled)
 
 ## Install
 
