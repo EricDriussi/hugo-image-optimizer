@@ -5,7 +5,8 @@ import (
 )
 
 type PostContent struct {
-	full_content     []byte
+	full_content []byte
+	// TODO. remove and leave Images() func?
 	image_references [][]byte
 }
 
@@ -49,6 +50,15 @@ func (c PostContent) Images() []string {
 		srting_paths = append(srting_paths, string(image_path))
 	}
 	return srting_paths
+}
+
+func (c *PostContent) UpdateImageReferences() {
+	any_img_regex := regexp.MustCompile("(.*)(jpg|png|jpeg|gif)(.*)")
+	webp_repl := []byte("${1}webp${3}")
+	for k, image_ref := range c.image_references {
+		c.image_references[k] = any_img_regex.ReplaceAll(image_ref, webp_repl)
+	}
+	c.full_content = any_img_regex.ReplaceAll(c.full_content, webp_repl)
 }
 
 func (c PostContent) Value() []byte {

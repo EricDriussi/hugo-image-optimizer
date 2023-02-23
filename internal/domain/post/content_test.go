@@ -65,4 +65,24 @@ func Test_Content(t *testing.T) {
 			assert.Contains(t, content.Images(), image_path3)
 		})
 	})
+
+	t.Run("updates image references", func(t *testing.T) {
+		png_ext := ".png"
+		partial_path := "../../path/src"
+		image_path := partial_path + png_ext
+		image_reference := fmt.Sprintf("![image](%s)", image_path)
+		rawContent := fmt.Sprintf(`line 1
+					line 2
+					line %s 3
+					line 4`,
+			image_reference)
+
+		content := post.NewContent([]byte(rawContent))
+		content.UpdateImageReferences()
+
+		assert.NotContains(t, string(content.Value()), image_path)
+		assert.Contains(t, string(content.Value()), partial_path+".webp)")
+		assert.NotContains(t, content.Images(), image_path)
+		assert.Contains(t, content.Images(), partial_path+".webp")
+	})
 }
