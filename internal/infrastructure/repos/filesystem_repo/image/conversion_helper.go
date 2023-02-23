@@ -3,6 +3,7 @@ package filesystemrepo
 import (
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -11,17 +12,18 @@ import (
 
 func runConversionCommand(image domain.Image) error {
 	if image.IsGif() {
-		cmd := gif2webpCommandBuilder(image)
-		if err := cmd.Run(); err != nil {
-			return errors.New(fmt.Sprintf("Couldn't convert gif: %s\n", image.GetPath()))
-		}
+		return gif2webp(image)
 	} else {
-		cmd := cwebpCommandBuilder(image)
-		if err := cmd.Run(); err != nil {
-			return errors.New(fmt.Sprintf("Couldn't convert image: %s\n", image.GetPath()))
-		}
+		return img2webp(image)
 	}
-	return nil
+}
+
+func gif2webp(image domain.Image) error {
+	cmd := gif2webpCommandBuilder(image)
+	if err := cmd.Run(); err != nil {
+		return errors.New(fmt.Sprintf("Couldn't convert gif: %s\n", image.GetPath()))
+	}
+	return os.Remove(image.GetPath())
 }
 
 func gif2webpCommandBuilder(image domain.Image) *exec.Cmd {
@@ -30,6 +32,14 @@ func gif2webpCommandBuilder(image domain.Image) *exec.Cmd {
 
 	cmd_params := []string{"-q", "50", "-mixed", image.GetPath(), "-o", webp_filepath}
 	return exec.Command("gif2webp", cmd_params...)
+}
+
+func img2webp(image domain.Image) error {
+	cmd := cwebpCommandBuilder(image)
+	if err := cmd.Run(); err != nil {
+		return errors.New(fmt.Sprintf("Couldn't convert image: %s\n", image.GetPath()))
+	}
+	return os.Remove(image.GetPath())
 }
 
 func cwebpCommandBuilder(image domain.Image) *exec.Cmd {
