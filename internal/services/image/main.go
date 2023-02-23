@@ -16,6 +16,21 @@ func NewImage(imageRepository domain.ImageRepository) ImageService {
 	}
 }
 
+func (s ImageService) Convert() error {
+	loadedImages, err := s.Load()
+	if err != nil {
+		return err
+	}
+
+	for _, image := range loadedImages {
+		rm_err := s.imageRepository.ConvertToWebp(image)
+		if rm_err != nil {
+			return errors.New("Failed to convert images")
+		}
+	}
+	return nil
+}
+
 func (s ImageService) RemoveAllExcept(image_references []string) error {
 	loadedImages, err := s.Load()
 	if err != nil {
