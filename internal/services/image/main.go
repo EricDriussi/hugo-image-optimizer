@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/EricDriussi/hugo-image-optimizer/internal/domain"
 )
@@ -21,12 +22,9 @@ func (s ImageService) Convert() error {
 	if err != nil {
 		return err
 	}
-
-	for _, image := range loadedImages {
-		rm_err := s.imageRepository.ConvertToWebp(image)
-		if rm_err != nil {
-			return errors.New("Failed to convert images")
-		}
+	conv_err := s.imageRepository.ConvertToWebp(loadedImages)
+	if conv_err != nil {
+		fmt.Println("[WARNING]: Some images were not converted :(")
 	}
 	return nil
 }

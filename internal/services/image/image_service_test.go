@@ -98,8 +98,7 @@ func Test_ImageService(t *testing.T) {
 		t.Run("all images", func(t *testing.T) {
 			imageRepositoryMock := new(mocks.ImageRepository)
 			imageRepositoryMock.On("Load").Return(images, nil)
-			imageRepositoryMock.On("ConvertToWebp", image1).Return(nil)
-			imageRepositoryMock.On("ConvertToWebp", image2).Return(nil)
+			imageRepositoryMock.On("ConvertToWebp", []domain.Image{image1, image2}).Return(nil)
 
 			imageService := services.NewImage(imageRepositoryMock)
 			err := imageService.Convert()
@@ -108,18 +107,16 @@ func Test_ImageService(t *testing.T) {
 			assert.NoError(t, err)
 		})
 
-		t.Run("stopping if the repository erros out", func(t *testing.T) {
+		t.Run("all images even if some conversions fail", func(t *testing.T) {
 			imageRepositoryMock := new(mocks.ImageRepository)
 			imageRepositoryMock.On("Load").Return(images, nil)
-			imageRepositoryMock.On("ConvertToWebp", image1).Return(nil)
-			imageRepositoryMock.On("ConvertToWebp", image2).Return(anError)
+			imageRepositoryMock.On("ConvertToWebp", []domain.Image{image1, image2}).Return(anError)
 
 			imageService := services.NewImage(imageRepositoryMock)
 			err := imageService.Convert()
 			imageRepositoryMock.AssertExpectations(t)
 
-			assert.Error(t, err)
-			assert.ErrorContains(t, err, "Failed to convert images")
+			assert.NoError(t, err)
 		})
 	})
 }
