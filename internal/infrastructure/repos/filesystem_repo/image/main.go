@@ -15,6 +15,8 @@ type fsrepo struct {
 	excluded_dirs []string
 }
 
+var g errgroup.Group
+
 func NewImage(images_dir string, excluded []string) fsrepo {
 	return fsrepo{
 		images_dir:    images_dir,
@@ -44,15 +46,13 @@ func (r fsrepo) Load() ([]string, error) {
 	return images, err
 }
 
-var g errgroup.Group
-
 func (r fsrepo) ConvertToWebp(images []domain.Image) error {
 	conversionTask := func(path string) error {
 		for _, image := range images {
 			if strings.Contains(path, image.GetPath()) {
-				loop := image
+				image_copy := image
 				g.Go(func() error {
-					return runConversionCommand(loop)
+					return runConversionCommand(image_copy)
 				})
 			}
 		}
@@ -60,6 +60,7 @@ func (r fsrepo) ConvertToWebp(images []domain.Image) error {
 	}
 
 	filepath.Walk(r.parseImageDirDoing(conversionTask))
+
 	if rm_err := g.Wait(); rm_err != nil {
 		return errors.New("Some images were not converted :(")
 	}

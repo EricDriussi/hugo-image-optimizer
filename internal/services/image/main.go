@@ -22,8 +22,7 @@ func (s ImageService) Convert() error {
 	if err != nil {
 		return err
 	}
-	conv_err := s.imageRepository.ConvertToWebp(loadedImages)
-	if conv_err != nil {
+	if conv_err := s.imageRepository.ConvertToWebp(loadedImages); conv_err != nil {
 		fmt.Println("[WARNING]: Some images were not converted :(")
 	}
 	return nil

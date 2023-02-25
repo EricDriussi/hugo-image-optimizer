@@ -11,20 +11,20 @@ import (
 )
 
 func Test_ImageService(t *testing.T) {
-	pathOne := "a/file/path/image.png"
-	pathTwo := "a/file/path/to/another/image.jpg"
-	images := []string{pathOne, pathTwo}
+	aPath := "a/file/path/image.png"
+	anotherPath := "a/file/path/to/another/image.jpg"
+	image_paths := []string{aPath, anotherPath}
 	anError := errors.New("Something went wrong")
 
 	t.Run("Deletes", func(t *testing.T) {
-		image, image_err := domain.NewImage(pathTwo)
+		unreferencedImage, image_err := domain.NewImage(anotherPath)
 		assert.NoError(t, image_err)
 		image_reference := "/path/image.png"
 
 		t.Run("only unreferenced images", func(t *testing.T) {
 			imageRepositoryMock := new(mocks.ImageRepository)
-			imageRepositoryMock.On("Load").Return(images, nil)
-			imageRepositoryMock.On("Delete", image).Return(nil)
+			imageRepositoryMock.On("Load").Return(image_paths, nil)
+			imageRepositoryMock.On("Delete", unreferencedImage).Return(nil)
 
 			imageService := services.NewImage(imageRepositoryMock)
 			service_err := imageService.RemoveAllExcept([]string{image_reference})
@@ -35,8 +35,8 @@ func Test_ImageService(t *testing.T) {
 
 		t.Run("stopping if the repository erros out", func(t *testing.T) {
 			imageRepositoryMock := new(mocks.ImageRepository)
-			imageRepositoryMock.On("Load").Return(images, nil)
-			imageRepositoryMock.On("Delete", image).Return(anError)
+			imageRepositoryMock.On("Load").Return(image_paths, nil)
+			imageRepositoryMock.On("Delete", unreferencedImage).Return(anError)
 
 			imageService := services.NewImage(imageRepositoryMock)
 			err := imageService.RemoveAllExcept([]string{image_reference})
@@ -50,7 +50,7 @@ func Test_ImageService(t *testing.T) {
 	t.Run("Loads", func(t *testing.T) {
 		t.Run("all images", func(t *testing.T) {
 			imageRepositoryMock := new(mocks.ImageRepository)
-			imageRepositoryMock.On("Load").Return(images, nil)
+			imageRepositoryMock.On("Load").Return(image_paths, nil)
 
 			imageService := services.NewImage(imageRepositoryMock)
 			loadedImages, err := imageService.Load()
@@ -61,16 +61,16 @@ func Test_ImageService(t *testing.T) {
 		})
 
 		t.Run("discarding broken paths", func(t *testing.T) {
-			images := []string{pathOne, "borked"}
+			broken_image_paths := []string{aPath, "borked"}
 			imageRepositoryMock := new(mocks.ImageRepository)
-			imageRepositoryMock.On("Load").Return(images, nil)
+			imageRepositoryMock.On("Load").Return(broken_image_paths, nil)
 
 			imageService := services.NewImage(imageRepositoryMock)
 			loadedImages, err := imageService.Load()
 			imageRepositoryMock.AssertExpectations(t)
 
 			assert.Len(t, loadedImages, 1)
-			assert.Equal(t, pathOne, loadedImages[0].GetPath())
+			assert.Equal(t, aPath, loadedImages[0].GetPath())
 			assert.NoError(t, err)
 		})
 
@@ -89,16 +89,16 @@ func Test_ImageService(t *testing.T) {
 	})
 
 	t.Run("Converts", func(t *testing.T) {
-		images := []string{pathOne, pathTwo}
-		image1, image1_err := domain.NewImage(pathOne)
+		anImage, image1_err := domain.NewImage(aPath)
 		assert.NoError(t, image1_err)
-		image2, image2_err := domain.NewImage(pathTwo)
+		anotherImage, image2_err := domain.NewImage(anotherPath)
 		assert.NoError(t, image2_err)
+		images := []domain.Image{anImage, anotherImage}
 
 		t.Run("all images", func(t *testing.T) {
 			imageRepositoryMock := new(mocks.ImageRepository)
-			imageRepositoryMock.On("Load").Return(images, nil)
-			imageRepositoryMock.On("ConvertToWebp", []domain.Image{image1, image2}).Return(nil)
+			imageRepositoryMock.On("Load").Return(image_paths, nil)
+			imageRepositoryMock.On("ConvertToWebp", images).Return(nil)
 
 			imageService := services.NewImage(imageRepositoryMock)
 			err := imageService.Convert()
@@ -109,8 +109,8 @@ func Test_ImageService(t *testing.T) {
 
 		t.Run("all images even if some conversions fail", func(t *testing.T) {
 			imageRepositoryMock := new(mocks.ImageRepository)
-			imageRepositoryMock.On("Load").Return(images, nil)
-			imageRepositoryMock.On("ConvertToWebp", []domain.Image{image1, image2}).Return(anError)
+			imageRepositoryMock.On("Load").Return(image_paths, nil)
+			imageRepositoryMock.On("ConvertToWebp", images).Return(anError)
 
 			imageService := services.NewImage(imageRepositoryMock)
 			err := imageService.Convert()
