@@ -9,7 +9,7 @@ import (
 type ImageRepository interface {
 	Load() ([]string, error)
 	Delete(Image) error
-	ConvertToWebp(Image) error
+	ConvertToWebp([]Image) error
 }
 
 type Image struct {

@@ -102,7 +102,7 @@ func imageRepoTests(t *testing.T) {
 			defer f.Close()
 			assert.NoError(t, create_err)
 
-			repo_err := repo.ConvertToWebp(image)
+			repo_err := repo.ConvertToWebp([]domain.Image{image})
 			assert.NoError(t, repo_err)
 
 			rm_err := os.Remove(webpFilename)
@@ -119,7 +119,7 @@ func imageRepoTests(t *testing.T) {
 			image, image_err := domain.NewImage(pngFilename)
 			assert.NoError(t, image_err)
 
-			repo_err := repo.ConvertToWebp(image)
+			repo_err := repo.ConvertToWebp([]domain.Image{image})
 			assert.NoError(t, repo_err)
 
 			rm_err := os.Remove(webpFilename)
@@ -136,7 +136,7 @@ func imageRepoTests(t *testing.T) {
 			image, image_err := domain.NewImage(jpegFilename)
 			assert.NoError(t, image_err)
 
-			repo_err := repo.ConvertToWebp(image)
+			repo_err := repo.ConvertToWebp([]domain.Image{image})
 			assert.NoError(t, repo_err)
 
 			rm_err := os.Remove(webpFilename)
@@ -153,7 +153,7 @@ func imageRepoTests(t *testing.T) {
 			image, image_err := domain.NewImage(gifFilename)
 			assert.NoError(t, image_err)
 
-			repo_err := repo.ConvertToWebp(image)
+			repo_err := repo.ConvertToWebp([]domain.Image{image})
 			assert.NoError(t, repo_err)
 
 			rm_err := os.Remove(webpFilename)

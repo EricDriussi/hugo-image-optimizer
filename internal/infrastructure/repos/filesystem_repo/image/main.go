@@ -1,11 +1,13 @@
 package filesystemrepo
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/EricDriussi/hugo-image-optimizer/internal/domain"
+	"golang.org/x/sync/errgroup"
 )
 
 type fsrepo struct {
@@ -42,15 +44,26 @@ func (r fsrepo) Load() ([]string, error) {
 	return images, err
 }
 
-func (r fsrepo) ConvertToWebp(image domain.Image) error {
+var g errgroup.Group
+
+func (r fsrepo) ConvertToWebp(images []domain.Image) error {
 	conversionTask := func(path string) error {
-		if strings.Contains(path, image.GetPath()) {
-			return runConversionCommand(image)
+		for _, image := range images {
+			if strings.Contains(path, image.GetPath()) {
+				loop := image
+				g.Go(func() error {
+					return runConversionCommand(loop)
+				})
+			}
 		}
 		return nil
 	}
 
-	return filepath.Walk(r.parseImageDirDoing(conversionTask))
+	filepath.Walk(r.parseImageDirDoing(conversionTask))
+	if rm_err := g.Wait(); rm_err != nil {
+		return errors.New("Some images were not converted :(")
+	}
+	return nil
 }
 
 func (r fsrepo) parseImageDirDoing(toDoTask func(string) error) (string, filepath.WalkFunc) {
