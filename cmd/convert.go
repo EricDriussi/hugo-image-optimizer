@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"log"
 
-	imageService "github.com/EricDriussi/hugo-image-optimizer/internal/image_service"
-
 	"github.com/spf13/cobra"
 )
 
@@ -18,12 +16,11 @@ var convertCmd = &cobra.Command{
 	Short: "Convert images to webp",
 	Long:  "Converts all images (jpg, png, gif) to webp",
 	Run: func(cmd *cobra.Command, args []string) {
-		imageFiles := imageService.ImagesInIncludedDirs()
-		ConvertToWebp(imageFiles)
+		ConvertToWebp()
 	},
 }
 
-func ConvertToWebp(images []string) {
+func ConvertToWebp() {
 	fmt.Println("Converting all images to .webp")
 	fmt.Println(".gif and large .png might take a while...")
 	imageService := buildImageService()
