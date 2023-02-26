@@ -37,7 +37,7 @@ func (s ImageService) RemoveAllExcept(imageReferences []string) error {
 		if image.IsNotPresentIn(imageReferences) {
 			rmErr := s.imageRepository.Delete(image)
 			if rmErr != nil {
-				return errors.New("Failed to delete images")
+				return errors.New("Couldn't delete unused images :(")
 			}
 		}
 	}
@@ -48,7 +48,7 @@ func (s ImageService) RemoveAllExcept(imageReferences []string) error {
 func (s ImageService) Load() ([]domain.Image, error) {
 	rawImages, err := s.imageRepository.Load()
 	if err != nil {
-		return nil, errors.New("Failed to load images")
+		return nil, errors.New("Couldn't load images :(")
 	}
 
 	images := s.buildImagesIgnoringInvalid(rawImages)

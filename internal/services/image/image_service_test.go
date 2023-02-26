@@ -43,7 +43,7 @@ func Test_ImageService(t *testing.T) {
 			imageRepositoryMock.AssertExpectations(t)
 
 			assert.Error(t, err)
-			assert.ErrorContains(t, err, "Failed to delete images")
+			assert.ErrorContains(t, err, "Couldn't delete unused images :(")
 		})
 	})
 
@@ -84,7 +84,7 @@ func Test_ImageService(t *testing.T) {
 
 			assert.Nil(t, loadedImages)
 			assert.Error(t, err)
-			assert.ErrorContains(t, err, "Failed to load images")
+			assert.ErrorContains(t, err, "Couldn't load images :(")
 		})
 	})
 

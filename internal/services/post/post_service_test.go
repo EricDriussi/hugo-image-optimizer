@@ -63,7 +63,7 @@ func Test_PostService(t *testing.T) {
 
 				assert.Nil(t, posts)
 				assert.Error(t, err)
-				assert.ErrorContains(t, err, "Repository failed to load posts")
+				assert.ErrorContains(t, err, "Couldn't load posts :(")
 			})
 
 			t.Run("if one post erros out", func(t *testing.T) {
@@ -123,7 +123,7 @@ func Test_PostService(t *testing.T) {
 			postRepositoryMock.AssertExpectations(t)
 
 			assert.Error(t, err)
-			assert.ErrorContains(t, err, "Repository failed to update posts")
+			assert.ErrorContains(t, err, "Couldn't update posts :(")
 		})
 	})
 }

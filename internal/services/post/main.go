@@ -34,7 +34,7 @@ func (s PostService) UpdateAllImageReferences() error {
 	for _, post := range allPosts {
 		post.UpdateImageReferences()
 		if writeErr := s.postRepository.Write(post); writeErr != nil {
-			return errors.New("Repository failed to update posts")
+			return errors.New("Couldn't update posts :(")
 		}
 	}
 	return nil
@@ -43,7 +43,7 @@ func (s PostService) UpdateAllImageReferences() error {
 func (s PostService) Load() ([]domain.Post, error) {
 	rawPosts, err := s.postRepository.Load()
 	if err != nil {
-		return nil, errors.New("Repository failed to load posts")
+		return nil, errors.New("Couldn't load posts :(")
 	}
 
 	return buildPostsAllOrNothing(rawPosts)
