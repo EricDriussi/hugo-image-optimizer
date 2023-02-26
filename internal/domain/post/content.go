@@ -1,6 +1,7 @@
 package post
 
 import (
+	"fmt"
 	"regexp"
 )
 
@@ -34,14 +35,21 @@ func onlyImagePaths(image_references [][][]byte) [][]byte {
 }
 
 func getMdReferencesMatchesIn(text []byte) [][][]byte {
-	md_regex := regexp.MustCompile("!\\[.*\\]\\((.*\\.(jpg|png|jpeg|gif))\\)")
+	md_regex := regexp.MustCompile(mdRefRegex)
 	return md_regex.FindAllSubmatch(text, -1)
 }
 
 func getFrontMatterReferencesMatchesIn(text []byte) [][][]byte {
-	front_matter_regex := regexp.MustCompile("(?m)^image: (.*\\.(jpg|png|jpeg))$")
+	front_matter_regex := regexp.MustCompile(frontMatterRefRegex)
 	return front_matter_regex.FindAllSubmatch(text, -1)
 }
+
+var (
+	validExt            = "(jpg|png|jpeg|gif)"
+	imagePath           = fmt.Sprintf("(.*\\.)%s", validExt)
+	mdRefRegex          = fmt.Sprintf("!\\[.*\\]\\((%s)\\)", imagePath)
+	frontMatterRefRegex = fmt.Sprintf("(?m)^image: (%s)$", imagePath)
+)
 
 func (c PostContent) Images() []string {
 	var srting_paths []string
