@@ -36,6 +36,12 @@ else
 	@$(call COLOR_COMMAND, go test ./...)
 endif
 
+.PHONY: test-cover
+test-cover: ## Test coverage report
+	@go test ./... -coverprofile=cover.html
+	@go tool cover -html=cover.html
+	@rm cover.html
+
 .PHONY: test-watch
 test-watch: ## Run tests in watch mode
 ifdef FILE_PATH
