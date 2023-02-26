@@ -15,16 +15,23 @@ import (
 )
 
 var (
-	version bool
-	cfgFile string
+	version     bool
+	cfgFile     string
+	websitePath string
 )
 
 func init() {
 	rootCmd.Flags().BoolVarP(&version, "version", "v", false, "Version number")
+
 	rootCmd.Flags().StringVar(&cfgFile, "config", "", "Config file")
 	cleanCmd.Flags().StringVar(&cfgFile, "config", "", "Config file")
 	convertCmd.Flags().StringVar(&cfgFile, "config", "", "Config file")
 	updateCmd.Flags().StringVar(&cfgFile, "config", "", "Config file")
+
+	rootCmd.Flags().StringVar(&websitePath, "website-path", ".", "Website path")
+	cleanCmd.Flags().StringVar(&websitePath, "website-path", ".", "Website path")
+	convertCmd.Flags().StringVar(&websitePath, "website-path", ".", "Website path")
+	updateCmd.Flags().StringVar(&websitePath, "website-path", ".", "Website path")
 }
 
 var rootCmd = &cobra.Command{
@@ -39,6 +46,7 @@ var rootCmd = &cobra.Command{
 		if version {
 			fmt.Println("v1.0.0")
 		} else {
+			os.Chdir(websitePath)
 			config.Load(cfgFile)
 			RmUnusedImages()
 			ConvertToWebp()

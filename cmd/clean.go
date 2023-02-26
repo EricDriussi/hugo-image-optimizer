@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"log"
+	"os"
 
 	"github.com/EricDriussi/hugo-image-optimizer/internal/config"
 	"github.com/spf13/cobra"
@@ -16,6 +17,7 @@ var cleanCmd = &cobra.Command{
 	Short: "Remove unused images",
 	Long:  "Removes images not being referenced in posts",
 	Run: func(cmd *cobra.Command, args []string) {
+		os.Chdir(websitePath)
 		config.Load(cfgFile)
 		RmUnusedImages()
 	},

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"log"
+	"os"
 
 	"github.com/EricDriussi/hugo-image-optimizer/internal/config"
 	"github.com/spf13/cobra"
@@ -16,6 +17,7 @@ var convertCmd = &cobra.Command{
 	Short: "Convert images to webp",
 	Long:  "Converts all images (jpg, png, gif) to webp",
 	Run: func(cmd *cobra.Command, args []string) {
+		os.Chdir(websitePath)
 		config.Load(cfgFile)
 		ConvertToWebp()
 	},

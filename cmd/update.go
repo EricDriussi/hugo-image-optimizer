@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"log"
+	"os"
 
 	"github.com/EricDriussi/hugo-image-optimizer/internal/config"
 	"github.com/spf13/cobra"
@@ -16,6 +17,7 @@ var updateCmd = &cobra.Command{
 	Short: "Updates all image references",
 	Long:  "Updates all image references in MD to .webp",
 	Run: func(cmd *cobra.Command, args []string) {
+		os.Chdir(websitePath)
 		config.Load(cfgFile)
 		UpdateReferences()
 	},
