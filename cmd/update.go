@@ -2,8 +2,7 @@ package cmd
 
 import (
 	"fmt"
-
-	postReader "github.com/EricDriussi/hugo-image-optimizer/internal/post_reader_service"
+	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -23,6 +22,9 @@ var referenceCmd = &cobra.Command{
 
 func UpdateReferences() {
 	fmt.Println("Updating image references in posts")
-	postReader.Update_image_references()
+	postService := buildPostService()
+	if err := postService.UpdateAllImageReferences(); err != nil {
+		log.Fatal(err)
+	}
 	fmt.Println("Done updating!")
 }
