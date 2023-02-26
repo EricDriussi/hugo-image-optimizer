@@ -34,16 +34,16 @@ func NewImage(filepath string) (Image, error) {
 	}, nil
 }
 
-func (i Image) IsNotPresentIn(list_of_references []string) bool {
-	for _, ref := range list_of_references {
-		if strings.Contains(i.GetPath(), ref) {
+func (i Image) IsNotPresentIn(listOfReferences []string) bool {
+	for _, ref := range listOfReferences {
+		if strings.Contains(i.Path(), ref) {
 			return false
 		}
 	}
 	return true
 }
 
-func (i Image) GetExtension() string {
+func (i Image) Extension() string {
 	return i.extension.Value()
 }
 
@@ -51,6 +51,6 @@ func (i Image) IsGif() bool {
 	return strings.EqualFold(i.extension.Value(), ".gif")
 }
 
-func (i Image) GetPath() string {
+func (i Image) Path() string {
 	return i.path.Value()
 }

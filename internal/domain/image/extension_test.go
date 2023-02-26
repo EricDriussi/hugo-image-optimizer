@@ -10,9 +10,9 @@ import (
 
 func Test_Extension(t *testing.T) {
 	t.Run("handles all valid image extensions", func(t *testing.T) {
-		valid_extensions := []string{".png", ".jpg", ".jpeg", ".gif"}
+		validExtensions := []string{".png", ".jpg", ".jpeg", ".gif"}
 
-		for _, ext := range valid_extensions {
+		for _, ext := range validExtensions {
 			filename := strings.Join([]string{"aName", ext}, "")
 
 			extension, err := image.NewExtension(filename)

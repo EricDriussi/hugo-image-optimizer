@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_PostDomain_Constructor(t *testing.T) {
+func Test_DomainPost(t *testing.T) {
 	t.Run("errors out if given an empty file path", func(t *testing.T) {
 		post, err := domain.NewPost("", []byte("Some content"))
 
@@ -23,23 +23,23 @@ func Test_PostDomain_Constructor(t *testing.T) {
 		post, err := domain.NewPost(path, content)
 
 		assert.NoError(t, err)
-		assert.Equal(t, path, post.GetPath())
-		assert.Equal(t, string(content), post.GetFullContent())
+		assert.Equal(t, path, post.Path())
+		assert.Equal(t, string(content), post.Content())
 	})
 
 	t.Run("cleans image references", func(t *testing.T) {
 		path := "a/random/path/filename.md"
 
-		image_path := "/path/src.png"
-		image_reference := fmt.Sprintf("![image](../.././%s)", image_path)
-		content := contentWithImage(image_reference)
+		imagePath := "/path/src.png"
+		imageReference := fmt.Sprintf("![image](../.././%s)", imagePath)
+		content := contentWithImage(imageReference)
 
 		post, err := domain.NewPost(path, content)
 
 		assert.NoError(t, err)
-		assert.Equal(t, path, post.GetPath())
-		assert.Equal(t, string(content), post.GetFullContent())
-		assert.Contains(t, post.GetCleanImageReferences(), image_path)
+		assert.Equal(t, path, post.Path())
+		assert.Equal(t, string(content), post.Content())
+		assert.Contains(t, post.ReferencedImagePaths(), imagePath)
 	})
 }
 

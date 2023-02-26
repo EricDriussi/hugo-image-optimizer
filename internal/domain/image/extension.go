@@ -8,7 +8,7 @@ import (
 )
 
 type Extension struct {
-	valid_extension string
+	extension string
 }
 
 func NewExtension(filepath string) (Extension, error) {
@@ -16,7 +16,7 @@ func NewExtension(filepath string) (Extension, error) {
 	if !ok {
 		return Extension{}, errors.New(fmt.Sprintf("Invalid extension, ignoring: %s", filepath))
 	}
-	return Extension{valid_extension: extension}, nil
+	return Extension{extension: extension}, nil
 }
 
 func validateExtension(filepath string) (string, bool) {
@@ -30,10 +30,10 @@ func isNotEmpty(ext string) bool {
 }
 
 func isSupported(ext string) bool {
-	valid_ext := regexp.MustCompile(".(jpg|png|jpeg|gif)")
-	return valid_ext.Match([]byte(ext))
+	validExt := regexp.MustCompile(".(jpg|png|jpeg|gif)")
+	return validExt.Match([]byte(ext))
 }
 
 func (n Extension) Value() string {
-	return n.valid_extension
+	return n.extension
 }

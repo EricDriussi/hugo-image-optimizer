@@ -17,98 +17,98 @@ func Test_Content(t *testing.T) {
 
 	t.Run("extracts the image references", func(t *testing.T) {
 		t.Run("from the content", func(t *testing.T) {
-			image_path := "../path/src.png"
-			image_reference := fmt.Sprintf("![image](%s)", image_path)
+			imagePath := "../path/src.png"
+			imageReference := fmt.Sprintf("![image](%s)", imagePath)
 			rawContent := fmt.Sprintf(`line 1
 					line 2
 					line %s 3
 					line 4`,
-				image_reference)
+				imageReference)
 
 			content := post.NewContent([]byte(rawContent))
-			assert.Contains(t, content.Images(), image_path)
+			assert.Contains(t, content.Images(), imagePath)
 		})
 
 		t.Run("from the front matter", func(t *testing.T) {
-			image_path := "/path/src.png"
-			image_reference := fmt.Sprintf("image: %s", image_path)
+			imagePath := "/path/src.png"
+			imageReference := fmt.Sprintf("image: %s", imagePath)
 			rawContent := fmt.Sprintf(`%s
 					line 1
 					line 2`,
-				image_reference)
+				imageReference)
 
 			content := post.NewContent([]byte(rawContent))
-			assert.Contains(t, content.Images(), image_path)
+			assert.Contains(t, content.Images(), imagePath)
 		})
 
 		t.Run("discarding false positives", func(t *testing.T) {
-			png_ext := ".png"
-			partial_path := "../../path/src"
-			image_path := partial_path + png_ext
+			pngExt := ".png"
+			partialPath := "../../path/src"
+			imagePath := partialPath + pngExt
 			rawContent := fmt.Sprintf(`line 1
 					line 2
 					line %s 3
 					line 4`,
-				image_path)
+				imagePath)
 
 			content := post.NewContent([]byte(rawContent))
 
-			assert.NotContains(t, content.Images(), image_path)
+			assert.NotContains(t, content.Images(), imagePath)
 		})
 	})
 
 	t.Run("updates image references", func(t *testing.T) {
 		t.Run("in content", func(t *testing.T) {
-			png_ext := ".jpeg"
-			partial_path := "../../another/path/pic"
-			image_path := partial_path + png_ext
-			image_reference := fmt.Sprintf("![image](%s)", image_path)
+			pngExt := ".jpeg"
+			partialPath := "../../another/path/pic"
+			imagePath := partialPath + pngExt
+			imageReference := fmt.Sprintf("![image](%s)", imagePath)
 			rawContent := fmt.Sprintf(`line 1
 					line 
 					line %s 3
 					line 4`,
-				image_reference)
+				imageReference)
 
 			content := post.NewContent([]byte(rawContent))
 			content.UpdateImageReferences()
 
-			assert.NotContains(t, string(content.Value()), image_path)
-			assert.Contains(t, string(content.Value()), "![image]("+partial_path+".webp)")
+			assert.NotContains(t, string(content.Value()), imagePath)
+			assert.Contains(t, string(content.Value()), "![image]("+partialPath+".webp)")
 		})
 
 		t.Run("in front matter", func(t *testing.T) {
-			png_ext := ".png"
-			partial_path := "../../path/src"
-			image_path := partial_path + png_ext
-			image_reference := fmt.Sprintf("image: %s", image_path)
+			pngExt := ".png"
+			partialPath := "../../path/src"
+			imagePath := partialPath + pngExt
+			imageReference := fmt.Sprintf("image: %s", imagePath)
 			rawContent := fmt.Sprintf(`%s
 					line 2
 					line 3
 					line 4`,
-				image_reference)
+				imageReference)
 
 			content := post.NewContent([]byte(rawContent))
 			content.UpdateImageReferences()
 
-			assert.NotContains(t, string(content.Value()), image_path)
-			assert.Contains(t, string(content.Value()), "image: "+partial_path+".webp")
+			assert.NotContains(t, string(content.Value()), imagePath)
+			assert.Contains(t, string(content.Value()), "image: "+partialPath+".webp")
 		})
 
 		t.Run("discarding false positives", func(t *testing.T) {
-			png_ext := ".png"
-			partial_path := "../../path/src"
-			image_path := partial_path + png_ext
+			pngExt := ".png"
+			partialPath := "../../path/src"
+			imagePath := partialPath + pngExt
 			rawContent := fmt.Sprintf(`line 1
 					line 2
 					line %s 3
 					line 4`,
-				image_path)
+				imagePath)
 
 			content := post.NewContent([]byte(rawContent))
 			content.UpdateImageReferences()
 
-			assert.Contains(t, string(content.Value()), image_path)
-			assert.NotContains(t, string(content.Value()), partial_path+".webp")
+			assert.Contains(t, string(content.Value()), imagePath)
+			assert.NotContains(t, string(content.Value()), partialPath+".webp")
 		})
 	})
 }

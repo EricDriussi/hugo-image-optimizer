@@ -6,18 +6,18 @@ import (
 )
 
 type fsrepo struct {
-	posts_dir string
+	postsDir string
 }
 
-func NewPost(posts_dir string) fsrepo {
+func NewPost(postsDir string) fsrepo {
 	return fsrepo{
-		posts_dir: posts_dir,
+		postsDir: postsDir,
 	}
 }
 
 func (r fsrepo) Load() (map[string][]byte, error) {
 	posts := map[string][]byte{}
-	err := filepath.Walk(r.posts_dir, r.loadPostsInto(posts))
+	err := filepath.Walk(r.postsDir, r.loadPostsInto(posts))
 	return posts, err
 }
 
@@ -30,8 +30,8 @@ func (r fsrepo) loadPostsInto(posts map[string][]byte) filepath.WalkFunc {
 			return nil
 		}
 
-		single_post, err := os.ReadFile(filepath)
-		posts[filepath] = single_post
+		singlePost, err := os.ReadFile(filepath)
+		posts[filepath] = singlePost
 		return err
 	}
 }

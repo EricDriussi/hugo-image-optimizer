@@ -12,18 +12,18 @@ import (
 
 func Test_PostService(t *testing.T) {
 	pathOne := "a/file/path/post.md"
-	image_referenceOne := "![image](../path/src.png)"
+	imageReferenceOne := "![image](../path/src.png)"
 	contentOne := fmt.Sprintf(`line 1
 					line %s 2
 					line 4`,
-		image_referenceOne)
+		imageReferenceOne)
 
 	pathTwo := "a/file/path/to/another/post.md"
-	image_referenceTwo := "![image](../path/src2.jpg)"
+	imageReferenceTwo := "![image](../path/src2.jpg)"
 	contentTwo := fmt.Sprintf(`line 1
 					%s
 					line 4`,
-		image_referenceTwo)
+		imageReferenceTwo)
 
 	posts := map[string][]byte{pathOne: []byte(contentOne), pathTwo: []byte(contentTwo)}
 
@@ -32,7 +32,7 @@ func Test_PostService(t *testing.T) {
 		postRepositoryMock.On("Load").Return(posts, nil)
 
 		postService := services.NewPost(postRepositoryMock)
-		imageReferences, err := postService.GetAllReferencedImagePaths()
+		imageReferences, err := postService.AllReferencedImagePaths()
 		postRepositoryMock.AssertExpectations(t)
 
 		assert.Len(t, imageReferences, 2)

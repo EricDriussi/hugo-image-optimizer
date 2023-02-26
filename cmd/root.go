@@ -2,8 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	imageService "github.com/EricDriussi/hugo-image-optimizer/internal/image_service"
 	"os"
+
+	imageService "github.com/EricDriussi/hugo-image-optimizer/internal/image_service"
 
 	"github.com/spf13/cobra"
 )
@@ -27,10 +28,10 @@ var rootCmd = &cobra.Command{
 		if version {
 			fmt.Println("v1.0.0")
 		} else {
-			image_files := imageService.ImagesInIncludedDirs()
-			Rm_unused_images()
-			Convert_to_webp(image_files)
-			Update_References()
+			imageFiles := imageService.ImagesInIncludedDirs()
+			RmUnusedImages()
+			ConvertToWebp(imageFiles)
+			UpdateReferences()
 		}
 	},
 }

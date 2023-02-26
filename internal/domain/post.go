@@ -30,18 +30,18 @@ func NewPost(filepath string, rawContent []byte) (Post, error) {
 	return newPost, nil
 }
 
-func (p Post) GetPath() string {
+func (p Post) Path() string {
 	return p.path.Value()
 }
 
-func (p Post) GetCleanImageReferences() []string {
-	var cleaned_image_references []string
+func (p Post) ReferencedImagePaths() []string {
+	var cleanedImageReferences []string
 	for _, image := range p.content.Images() {
-		cleaned_image_references = append(cleaned_image_references, pathlib.Clean("/"+image))
+		cleanedImageReferences = append(cleanedImageReferences, pathlib.Clean("/"+image))
 	}
-	return cleaned_image_references
+	return cleanedImageReferences
 }
 
-func (p Post) GetFullContent() string {
+func (p Post) Content() string {
 	return string(p.content.Value())
 }

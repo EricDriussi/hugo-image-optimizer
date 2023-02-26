@@ -22,21 +22,21 @@ func (s ImageService) Convert() error {
 	if err != nil {
 		return err
 	}
-	if conv_err := s.imageRepository.ConvertToWebp(loadedImages); conv_err != nil {
+	if convErr := s.imageRepository.ConvertToWebp(loadedImages); convErr != nil {
 		fmt.Println("[WARNING]: Some images were not converted :(")
 	}
 	return nil
 }
 
-func (s ImageService) RemoveAllExcept(image_references []string) error {
+func (s ImageService) RemoveAllExcept(imageReferences []string) error {
 	loadedImages, err := s.Load()
 	if err != nil {
 		return err
 	}
 	for _, image := range loadedImages {
-		if image.IsNotPresentIn(image_references) {
-			rm_err := s.imageRepository.Delete(image)
-			if rm_err != nil {
+		if image.IsNotPresentIn(imageReferences) {
+			rmErr := s.imageRepository.Delete(image)
+			if rmErr != nil {
 				return errors.New("Failed to delete images")
 			}
 		}

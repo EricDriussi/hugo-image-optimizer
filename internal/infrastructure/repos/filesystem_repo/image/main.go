@@ -11,23 +11,23 @@ import (
 )
 
 type fsrepo struct {
-	images_dir    string
-	excluded_dirs []string
+	imagesDir    string
+	excludedDirs []string
 }
 
 var g errgroup.Group
 
-func NewImage(images_dir string, excluded []string) fsrepo {
+func NewImage(imagesDir string, excluded []string) fsrepo {
 	return fsrepo{
-		images_dir:    images_dir,
-		excluded_dirs: excluded,
+		imagesDir:    imagesDir,
+		excludedDirs: excluded,
 	}
 }
 
 func (r fsrepo) Delete(image domain.Image) error {
 	deletionTask := func(path string) error {
-		if strings.Contains(path, image.GetPath()) {
-			return os.Remove(image.GetPath())
+		if strings.Contains(path, image.Path()) {
+			return os.Remove(image.Path())
 		}
 		return nil
 	}
@@ -49,10 +49,10 @@ func (r fsrepo) Load() ([]string, error) {
 func (r fsrepo) ConvertToWebp(images []domain.Image) error {
 	conversionTask := func(path string) error {
 		for _, image := range images {
-			if strings.Contains(path, image.GetPath()) {
-				image_copy := image
+			if strings.Contains(path, image.Path()) {
+				imageCopy := image
 				g.Go(func() error {
-					return runConversionCommand(image_copy)
+					return runConversionCommand(imageCopy)
 				})
 			}
 		}
@@ -61,14 +61,14 @@ func (r fsrepo) ConvertToWebp(images []domain.Image) error {
 
 	filepath.Walk(r.parseImageDirDoing(conversionTask))
 
-	if rm_err := g.Wait(); rm_err != nil {
+	if rmErr := g.Wait(); rmErr != nil {
 		return errors.New("Some images were not converted :(")
 	}
 	return nil
 }
 
 func (r fsrepo) parseImageDirDoing(toDoTask func(string) error) (string, filepath.WalkFunc) {
-	return r.images_dir, func(path string, file os.FileInfo, error error) error {
+	return r.imagesDir, func(path string, file os.FileInfo, error error) error {
 		if error != nil {
 			return error
 		}
@@ -81,8 +81,8 @@ func (r fsrepo) parseImageDirDoing(toDoTask func(string) error) (string, filepat
 }
 
 func (r fsrepo) skipIfExcluded(file os.FileInfo) error {
-	for _, excluded_dir := range r.excluded_dirs {
-		if strings.Contains(excluded_dir, file.Name()) {
+	for _, excludedDir := range r.excludedDirs {
+		if strings.Contains(excludedDir, file.Name()) {
 			return filepath.SkipDir
 		}
 	}

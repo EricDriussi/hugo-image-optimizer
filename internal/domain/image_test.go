@@ -8,10 +8,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Image(t *testing.T) {
+func Test_DomainImage(t *testing.T) {
 	t.Run("errors out if given an invalid file", func(t *testing.T) {
-		invalid_filepaths := []string{"path/with/noExtension", ""}
-		for _, filepath := range invalid_filepaths {
+		invalidFilepaths := []string{"path/with/noExtension", ""}
+		for _, filepath := range invalidFilepaths {
 			image, err := domain.NewImage(filepath)
 
 			assert.Error(t, err)
@@ -25,8 +25,8 @@ func Test_Image(t *testing.T) {
 		image, err := domain.NewImage(filepath)
 
 		assert.NoError(t, err)
-		assert.Equal(t, extension, image.GetExtension())
-		assert.Equal(t, filepath, image.GetPath())
+		assert.Equal(t, extension, image.Extension())
+		assert.Equal(t, filepath, image.Path())
 	})
 
 	t.Run("checks if is present in reference list", func(t *testing.T) {
@@ -36,11 +36,10 @@ func Test_Image(t *testing.T) {
 		image, err := domain.NewImage(filepath)
 		assert.NoError(t, err)
 
-		matching_reference := fmt.Sprintf("/path/to/%s", filename)
-		non_matching_reference := fmt.Sprintf("/irrelevant/path/%s", filename)
-		image_references := []string{matching_reference, non_matching_reference}
+		matchingReference := fmt.Sprintf("/path/to/%s", filename)
+		nonMatchingReference := fmt.Sprintf("/irrelevant/path/%s", filename)
 
-		assert.False(t, image.IsNotPresentIn(image_references))
-		assert.True(t, image.IsNotPresentIn([]string{non_matching_reference}))
+		assert.False(t, image.IsNotPresentIn([]string{matchingReference, nonMatchingReference}))
+		assert.True(t, image.IsNotPresentIn([]string{nonMatchingReference}))
 	})
 }

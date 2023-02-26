@@ -18,15 +18,15 @@ var convertCmd = &cobra.Command{
 	Short: "Convert images to webp",
 	Long:  "Converts all images (jpg, png, gif) to webp",
 	Run: func(cmd *cobra.Command, args []string) {
-		image_files := imageService.ImagesInIncludedDirs()
-		Convert_to_webp(image_files)
+		imageFiles := imageService.ImagesInIncludedDirs()
+		ConvertToWebp(imageFiles)
 	},
 }
 
-func Convert_to_webp(images []string) {
+func ConvertToWebp(images []string) {
 	fmt.Println("Converting all images to .webp")
 	fmt.Println(".gif and large .png might take a while...")
-	imageService := getImageService()
+	imageService := buildImageService()
 
 	if err := imageService.Convert(); err != nil {
 		log.Fatal(err)

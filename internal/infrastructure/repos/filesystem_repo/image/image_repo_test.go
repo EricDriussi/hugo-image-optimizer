@@ -10,19 +10,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_ImageRepository(t *testing.T) {
+func TestImageRepository(t *testing.T) {
 	runWithFixtures(t, func() {
 		imageRepoTests(t)
 	})
 }
 
 func imageRepoTests(t *testing.T) {
-	images_test_dir := "test/data/images/"
-	images_test_excluded_dirs := []string{"whoami", "donation"}
+	imagesTestDir := "test/data/images/"
+	imagesTestExcludedDirs := []string{"whoami", "donation"}
 
 	t.Run("#LOAD", func(t *testing.T) {
 		t.Run("Loads all images recursively if directory exists", func(t *testing.T) {
-			repo := filesystemrepo.NewImage(images_test_dir, []string{})
+			repo := filesystemrepo.NewImage(imagesTestDir, []string{})
 
 			loadedImages, err := repo.Load()
 
@@ -31,7 +31,7 @@ func imageRepoTests(t *testing.T) {
 		})
 
 		t.Run("Doesn't load images from excluded directories", func(t *testing.T) {
-			repo := filesystemrepo.NewImage(images_test_dir, images_test_excluded_dirs)
+			repo := filesystemrepo.NewImage(imagesTestDir, imagesTestExcludedDirs)
 
 			loadedImages, err := repo.Load()
 
@@ -51,113 +51,113 @@ func imageRepoTests(t *testing.T) {
 
 	t.Run("#DELETE", func(t *testing.T) {
 		t.Run("Doesn't delete images from excluded directories", func(t *testing.T) {
-			repo := filesystemrepo.NewImage(images_test_dir, images_test_excluded_dirs)
+			repo := filesystemrepo.NewImage(imagesTestDir, imagesTestExcludedDirs)
 
-			filename := fmt.Sprintf("%s%s%s", images_test_dir, images_test_excluded_dirs[0], "/testFile.png")
-			image, image_err := domain.NewImage(filename)
-			assert.NoError(t, image_err)
+			filename := fmt.Sprintf("%s%s%s", imagesTestDir, imagesTestExcludedDirs[0], "/testFile.png")
+			image, imageErr := domain.NewImage(filename)
+			assert.NoError(t, imageErr)
 
-			f, create_err := os.Create(filename)
+			f, createErr := os.Create(filename)
 			defer f.Close()
-			assert.NoError(t, create_err)
+			assert.NoError(t, createErr)
 
-			repo_err := repo.Delete(image)
-			assert.NoError(t, repo_err)
+			repoErr := repo.Delete(image)
+			assert.NoError(t, repoErr)
 
-			rm_err := os.Remove(filename)
-			assert.NoError(t, rm_err)
+			rmErr := os.Remove(filename)
+			assert.NoError(t, rmErr)
 		})
 
 		t.Run("Deletes an image", func(t *testing.T) {
-			repo := filesystemrepo.NewImage(images_test_dir, images_test_excluded_dirs)
+			repo := filesystemrepo.NewImage(imagesTestDir, imagesTestExcludedDirs)
 
-			filename := fmt.Sprintf("%s%s", images_test_dir, "testFile.png")
-			image, image_err := domain.NewImage(filename)
-			assert.NoError(t, image_err)
+			filename := fmt.Sprintf("%s%s", imagesTestDir, "testFile.png")
+			image, imageErr := domain.NewImage(filename)
+			assert.NoError(t, imageErr)
 
-			f, create_err := os.Create(filename)
+			f, createErr := os.Create(filename)
 			defer f.Close()
-			assert.NoError(t, create_err)
+			assert.NoError(t, createErr)
 
-			repo_err := repo.Delete(image)
-			assert.NoError(t, repo_err)
+			repoErr := repo.Delete(image)
+			assert.NoError(t, repoErr)
 
-			rm_err := os.Remove(filename)
-			assert.Error(t, rm_err)
+			rmErr := os.Remove(filename)
+			assert.Error(t, rmErr)
 		})
 	})
 
 	t.Run("#CONVERT", func(t *testing.T) {
 		t.Run("Doesn't convert images from excluded directories", func(t *testing.T) {
-			repo := filesystemrepo.NewImage(images_test_dir, images_test_excluded_dirs)
+			repo := filesystemrepo.NewImage(imagesTestDir, imagesTestExcludedDirs)
 
-			filename := fmt.Sprintf("%s%s%s", images_test_dir, images_test_excluded_dirs[0],
+			filename := fmt.Sprintf("%s%s%s", imagesTestDir, imagesTestExcludedDirs[0],
 				"/avatar")
 			jpegFilename := fmt.Sprintf("%s%s", filename, ".jpg")
 			webpFilename := fmt.Sprintf("%s%s", filename, ".webp")
-			image, image_err := domain.NewImage(jpegFilename)
-			assert.NoError(t, image_err)
+			image, imageErr := domain.NewImage(jpegFilename)
+			assert.NoError(t, imageErr)
 
-			f, create_err := os.Create(filename)
+			f, createErr := os.Create(filename)
 			defer f.Close()
-			assert.NoError(t, create_err)
+			assert.NoError(t, createErr)
 
-			repo_err := repo.ConvertToWebp([]domain.Image{image})
-			assert.NoError(t, repo_err)
+			repoErr := repo.ConvertToWebp([]domain.Image{image})
+			assert.NoError(t, repoErr)
 
-			rm_err := os.Remove(webpFilename)
-			assert.Error(t, rm_err)
+			rmErr := os.Remove(webpFilename)
+			assert.Error(t, rmErr)
 		})
 
 		t.Run("Converts a PNG image to webp", func(t *testing.T) {
-			repo := filesystemrepo.NewImage(images_test_dir, images_test_excluded_dirs)
+			repo := filesystemrepo.NewImage(imagesTestDir, imagesTestExcludedDirs)
 
-			filename := fmt.Sprintf("%s%s", images_test_dir, "an_image")
+			filename := fmt.Sprintf("%s%s", imagesTestDir, "an_image")
 			pngFilename := fmt.Sprintf("%s%s", filename, ".png")
 			webpFilename := fmt.Sprintf("%s%s", filename, ".webp")
 
-			image, image_err := domain.NewImage(pngFilename)
-			assert.NoError(t, image_err)
+			image, imageErr := domain.NewImage(pngFilename)
+			assert.NoError(t, imageErr)
 
-			repo_err := repo.ConvertToWebp([]domain.Image{image})
-			assert.NoError(t, repo_err)
+			repoErr := repo.ConvertToWebp([]domain.Image{image})
+			assert.NoError(t, repoErr)
 
-			rm_err := os.Remove(webpFilename)
-			assert.NoError(t, rm_err)
+			rmErr := os.Remove(webpFilename)
+			assert.NoError(t, rmErr)
 		})
 
 		t.Run("Converts a JPEG image to webp", func(t *testing.T) {
-			repo := filesystemrepo.NewImage(images_test_dir, images_test_excluded_dirs)
+			repo := filesystemrepo.NewImage(imagesTestDir, imagesTestExcludedDirs)
 
-			filename := fmt.Sprintf("%s%s", images_test_dir, "another_image")
+			filename := fmt.Sprintf("%s%s", imagesTestDir, "another_image")
 			jpegFilename := fmt.Sprintf("%s%s", filename, ".jpeg")
 			webpFilename := fmt.Sprintf("%s%s", filename, ".webp")
 
-			image, image_err := domain.NewImage(jpegFilename)
-			assert.NoError(t, image_err)
+			image, imageErr := domain.NewImage(jpegFilename)
+			assert.NoError(t, imageErr)
 
-			repo_err := repo.ConvertToWebp([]domain.Image{image})
-			assert.NoError(t, repo_err)
+			repoErr := repo.ConvertToWebp([]domain.Image{image})
+			assert.NoError(t, repoErr)
 
-			rm_err := os.Remove(webpFilename)
-			assert.NoError(t, rm_err)
+			rmErr := os.Remove(webpFilename)
+			assert.NoError(t, rmErr)
 		})
 
 		t.Run("Converts a GIF to webp", func(t *testing.T) {
-			repo := filesystemrepo.NewImage(images_test_dir, images_test_excluded_dirs)
+			repo := filesystemrepo.NewImage(imagesTestDir, imagesTestExcludedDirs)
 
-			filename := fmt.Sprintf("%s%s", images_test_dir, "a_gif")
+			filename := fmt.Sprintf("%s%s", imagesTestDir, "a_gif")
 			gifFilename := fmt.Sprintf("%s%s", filename, ".gif")
 			webpFilename := fmt.Sprintf("%s%s", filename, ".webp")
 
-			image, image_err := domain.NewImage(gifFilename)
-			assert.NoError(t, image_err)
+			image, imageErr := domain.NewImage(gifFilename)
+			assert.NoError(t, imageErr)
 
-			repo_err := repo.ConvertToWebp([]domain.Image{image})
-			assert.NoError(t, repo_err)
+			repoErr := repo.ConvertToWebp([]domain.Image{image})
+			assert.NoError(t, repoErr)
 
-			rm_err := os.Remove(webpFilename)
-			assert.NoError(t, rm_err)
+			rmErr := os.Remove(webpFilename)
+			assert.NoError(t, rmErr)
 		})
 	})
 }
