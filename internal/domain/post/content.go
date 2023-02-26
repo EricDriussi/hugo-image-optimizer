@@ -5,79 +5,68 @@ import (
 	"regexp"
 )
 
+type imageMatch = [][][]byte
+
 type PostContent struct {
 	full_content []byte
-	// TODO. remove and leave Images() func?
-	image_references [][]byte
-}
-
-func NewContent(content []byte) PostContent {
-	return PostContent{
-		full_content:     content,
-		image_references: extractImageReferences(content),
-	}
-}
-
-func extractImageReferences(content []byte) [][]byte {
-	md_images := getMdReferencesMatchesIn(content)
-	front_matter_images := getFrontMatterReferencesMatchesIn(content)
-	all_images := append(md_images, front_matter_images...)
-	return onlyImagePaths(all_images)
-}
-
-func onlyImagePaths(image_references [][][]byte) [][]byte {
-	only_paths := [][]byte{}
-	for _, ref := range image_references {
-		image_path := ref[2]
-		only_paths = append(only_paths, image_path)
-	}
-	return only_paths
-}
-
-func getMdReferencesMatchesIn(text []byte) [][][]byte {
-	md_regex := regexp.MustCompile(mdRefRegex)
-	return md_regex.FindAllSubmatch(text, -1)
-}
-
-func getFrontMatterReferencesMatchesIn(text []byte) [][][]byte {
-	front_matter_regex := regexp.MustCompile(frontMatterRefRegex)
-	return front_matter_regex.FindAllSubmatch(text, -1)
 }
 
 var (
-	validExt            = "(jpg|png|jpeg|gif)"
-	imagePath           = fmt.Sprintf("(.*\\.)%s", validExt)
-	mdRefRegex          = fmt.Sprintf("(!\\[.*\\])\\((%s)\\)", imagePath)
-	frontMatterRefRegex = fmt.Sprintf("(?m)^(image: )(%s)$", imagePath)
+	validExt             = "(jpg|png|jpeg|gif)"
+	imagePath            = fmt.Sprintf("(.*\\.)%s", validExt)
+	mdReference          = fmt.Sprintf("(!\\[.*\\])\\((%s)\\)", imagePath)
+	frontMatterReference = fmt.Sprintf("(?m)^(image: )(%s)$", imagePath)
 )
 
-func (c PostContent) Images() []string {
-	var srting_paths []string
-	bytes_paths := c.image_references
-	for _, image_path := range bytes_paths {
-		srting_paths = append(srting_paths, string(image_path))
+func NewContent(content []byte) PostContent {
+	return PostContent{
+		full_content: content,
 	}
-	return srting_paths
+}
+
+func (c PostContent) Images() []string {
+	md_images := c.getImagesInMdBody()
+	front_matter_images := c.getImagesInFrontMatter()
+	all_images := append(md_images, front_matter_images...)
+	return filterImagePaths(all_images)
 }
 
 func (c *PostContent) UpdateImageReferences() {
-	any_img_regex := regexp.MustCompile("(.*)(jpg|png|jpeg|gif)(.*)")
-	webp_repl := []byte("${1}webp${3}")
-	for k, image_ref := range c.image_references {
-		c.image_references[k] = any_img_regex.ReplaceAll(image_ref, webp_repl)
-	}
-	c.updateImageReferencesInContent()
-}
-
-func (c *PostContent) updateImageReferencesInContent() {
-	md_regex := regexp.MustCompile(mdRefRegex)
-	webp_repl1 := []byte("${1}(${3}webp)")
-	c.full_content = md_regex.ReplaceAll(c.full_content, webp_repl1)
-	front_matter_regex := regexp.MustCompile(frontMatterRefRegex)
-	webp_repl2 := []byte("${1}${3}webp")
-	c.full_content = front_matter_regex.ReplaceAll(c.full_content, webp_repl2)
+	c.updateMdReferences()
+	c.updateFrontMatterReferences()
 }
 
 func (c PostContent) Value() []byte {
 	return c.full_content
+}
+
+func (c PostContent) getImagesInMdBody() imageMatch {
+	md_regex := regexp.MustCompile(mdReference)
+	return md_regex.FindAllSubmatch(c.full_content, -1)
+}
+
+func (c PostContent) getImagesInFrontMatter() imageMatch {
+	front_matter_regex := regexp.MustCompile(frontMatterReference)
+	return front_matter_regex.FindAllSubmatch(c.full_content, -1)
+}
+
+func filterImagePaths(image_matches imageMatch) []string {
+	paths := []string{}
+	for _, match := range image_matches {
+		image_path_submatch := match[2]
+		paths = append(paths, string(image_path_submatch))
+	}
+	return paths
+}
+
+func (c *PostContent) updateMdReferences() {
+	md_regex := regexp.MustCompile(mdReference)
+	replacement := "${1}(${3}webp)"
+	c.full_content = md_regex.ReplaceAll(c.full_content, []byte(replacement))
+}
+
+func (c *PostContent) updateFrontMatterReferences() {
+	front_matter_regex := regexp.MustCompile(frontMatterReference)
+	replacement := "${1}${3}webp"
+	c.full_content = front_matter_regex.ReplaceAll(c.full_content, []byte(replacement))
 }
