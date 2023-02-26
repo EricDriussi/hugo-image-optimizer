@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/EricDriussi/hugo-image-optimizer/internal/domain"
 	services "github.com/EricDriussi/hugo-image-optimizer/internal/services/post"
 	"github.com/EricDriussi/hugo-image-optimizer/test/mocks"
 	"github.com/stretchr/testify/assert"
@@ -26,6 +27,7 @@ func Test_PostService(t *testing.T) {
 		imageReferenceTwo)
 
 	posts := map[string][]byte{pathOne: []byte(contentOne), pathTwo: []byte(contentTwo)}
+	anError := errors.New("Something went wrong")
 
 	t.Run("Extracts all images", func(t *testing.T) {
 		postRepositoryMock := new(mocks.PostRepository)
@@ -52,7 +54,6 @@ func Test_PostService(t *testing.T) {
 
 		t.Run("No partial loading", func(t *testing.T) {
 			t.Run("if the repository erros out", func(t *testing.T) {
-				anError := errors.New("Something went wrong")
 				postRepositoryMock := new(mocks.PostRepository)
 				postRepositoryMock.On("Load").Return(nil, anError)
 
@@ -78,6 +79,51 @@ func Test_PostService(t *testing.T) {
 				assert.Error(t, err)
 				assert.ErrorContains(t, err, "[ABORTING] Couldn't build post")
 			})
+		})
+	})
+
+	t.Run("Updates", func(t *testing.T) {
+		imageReferenceOne := "![image](../path/src.webp)"
+		contentOne := fmt.Sprintf(`line 1
+					line %s 2
+					line 4`,
+			imageReferenceOne)
+
+		imageReferenceTwo := "![image](../path/src2.webp)"
+		contentTwo := fmt.Sprintf(`line 1
+					%s
+					line 4`,
+			imageReferenceTwo)
+
+		postOne, errOne := domain.NewPost(pathOne, []byte(contentOne))
+		assert.NoError(t, errOne)
+		postTwo, errTwo := domain.NewPost(pathTwo, []byte(contentTwo))
+		assert.NoError(t, errTwo)
+
+		t.Run("all image references", func(t *testing.T) {
+			postRepositoryMock := new(mocks.PostRepository)
+			postRepositoryMock.On("Load").Return(posts, nil)
+			postRepositoryMock.On("Write", postOne).Return(nil)
+			postRepositoryMock.On("Write", postTwo).Return(nil)
+
+			postService := services.NewPost(postRepositoryMock)
+			err := postService.UpdateAllImageReferences()
+			postRepositoryMock.AssertExpectations(t)
+
+			assert.NoError(t, err)
+		})
+
+		t.Run("stopping if one update fails", func(t *testing.T) {
+			postRepositoryMock := new(mocks.PostRepository)
+			postRepositoryMock.On("Load").Return(posts, nil)
+			postRepositoryMock.On("Write", postOne).Return(anError)
+
+			postService := services.NewPost(postRepositoryMock)
+			err := postService.UpdateAllImageReferences()
+			postRepositoryMock.AssertExpectations(t)
+
+			assert.Error(t, err)
+			assert.ErrorContains(t, err, "Repository failed to update posts")
 		})
 	})
 }

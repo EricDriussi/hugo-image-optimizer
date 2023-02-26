@@ -26,6 +26,20 @@ func (s PostService) AllReferencedImagePaths() ([]string, error) {
 	return images, err
 }
 
+func (s PostService) UpdateAllImageReferences() error {
+	allPosts, loadErr := s.Load()
+	if loadErr != nil {
+		return loadErr
+	}
+	for _, post := range allPosts {
+		post.UpdateImageReferences()
+		if writeErr := s.postRepository.Write(post); writeErr != nil {
+			return errors.New("Repository failed to update posts")
+		}
+	}
+	return nil
+}
+
 func (s PostService) Load() ([]domain.Post, error) {
 	rawPosts, err := s.postRepository.Load()
 	if err != nil {
