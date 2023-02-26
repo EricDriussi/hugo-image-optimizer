@@ -29,6 +29,15 @@ func Test_DomainImage(t *testing.T) {
 		assert.Equal(t, filepath, image.Path())
 	})
 
+	t.Run("checks if is GIF file", func(t *testing.T) {
+		extension := ".gif"
+		filepath := fmt.Sprintf("path/with/validExtension%s", extension)
+		image, err := domain.NewImage(filepath)
+		assert.NoError(t, err)
+
+		assert.True(t, image.IsGif())
+	})
+
 	t.Run("checks if is present in reference list", func(t *testing.T) {
 		filename := "valid.png"
 		filepath := fmt.Sprintf("/a/long/path/to/%s", filename)
