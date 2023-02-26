@@ -8,6 +8,7 @@ import (
 
 type PostRepository interface {
 	Load() (map[string][]byte, error)
+	Write(Post) error
 }
 
 type Post struct {
