@@ -7,11 +7,20 @@ import (
 )
 
 func Load() {
+	setDefaults()
 	viper.AddConfigPath(".")
+	viper.AddConfigPath("$HOME/.config/")
 	viper.SetConfigName("optimizer")
 	viper.SetConfigType("ini")
+
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic(fmt.Errorf("fatal error config file: %w", err))
+		fmt.Println("No config file was found, sticking with default values")
 	}
+}
+
+func setDefaults() {
+	viper.SetDefault("dirs.posts", "content/posts/")
+	viper.SetDefault("dirs.images", "static/images/")
+	viper.SetDefault("dirs.images_exclude", []string{"whoami", "donation"})
 }
