@@ -32,7 +32,7 @@ func (r fsrepo) Delete(image domain.Image) error {
 		return nil
 	}
 
-	return filepath.Walk(r.parseImageDirDoing(deletionTask))
+	return filepath.Walk(r.parseImagesDirDoing(deletionTask))
 }
 
 func (r fsrepo) Load() ([]string, error) {
@@ -42,7 +42,7 @@ func (r fsrepo) Load() ([]string, error) {
 		return nil
 	}
 
-	err := filepath.Walk(r.parseImageDirDoing(loadTask))
+	err := filepath.Walk(r.parseImagesDirDoing(loadTask))
 	return images, err
 }
 
@@ -59,7 +59,7 @@ func (r fsrepo) ConvertToWebp(images []domain.Image) error {
 		return nil
 	}
 
-	filepath.Walk(r.parseImageDirDoing(conversionTask))
+	filepath.Walk(r.parseImagesDirDoing(conversionTask))
 
 	if rmErr := g.Wait(); rmErr != nil {
 		return errors.New("Some images were not converted :(")
@@ -67,7 +67,7 @@ func (r fsrepo) ConvertToWebp(images []domain.Image) error {
 	return nil
 }
 
-func (r fsrepo) parseImageDirDoing(toDoTask func(string) error) (string, filepath.WalkFunc) {
+func (r fsrepo) parseImagesDirDoing(toDoTask func(string) error) (string, filepath.WalkFunc) {
 	return r.imagesDir, func(path string, file os.FileInfo, error error) error {
 		if error != nil {
 			return error

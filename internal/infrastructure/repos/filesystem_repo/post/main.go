@@ -17,12 +17,18 @@ func NewPost(postsDir string) fsrepo {
 
 func (r fsrepo) Load() (map[string][]byte, error) {
 	posts := map[string][]byte{}
-	err := filepath.Walk(r.postsDir, r.loadPostsInto(posts))
+	loadTask := func(path string) error {
+		singlePost, err := os.ReadFile(path)
+		posts[path] = singlePost
+		return err
+	}
+
+	err := filepath.Walk(r.parsePostsDirDoing(loadTask))
 	return posts, err
 }
 
-func (r fsrepo) loadPostsInto(posts map[string][]byte) filepath.WalkFunc {
-	return func(filepath string, file os.FileInfo, error error) error {
+func (r fsrepo) parsePostsDirDoing(toDoTask func(string) error) (string, filepath.WalkFunc) {
+	return r.postsDir, func(path string, file os.FileInfo, error error) error {
 		if error != nil {
 			return error
 		}
@@ -30,8 +36,6 @@ func (r fsrepo) loadPostsInto(posts map[string][]byte) filepath.WalkFunc {
 			return nil
 		}
 
-		singlePost, err := os.ReadFile(filepath)
-		posts[filepath] = singlePost
-		return err
+		return toDoTask(path)
 	}
 }
