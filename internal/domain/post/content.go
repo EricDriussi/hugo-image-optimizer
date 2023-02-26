@@ -28,7 +28,7 @@ func extractImageReferences(content []byte) [][]byte {
 func onlyImagePaths(image_references [][][]byte) [][]byte {
 	only_paths := [][]byte{}
 	for _, ref := range image_references {
-		image_path := ref[1]
+		image_path := ref[2]
 		only_paths = append(only_paths, image_path)
 	}
 	return only_paths
@@ -47,8 +47,8 @@ func getFrontMatterReferencesMatchesIn(text []byte) [][][]byte {
 var (
 	validExt            = "(jpg|png|jpeg|gif)"
 	imagePath           = fmt.Sprintf("(.*\\.)%s", validExt)
-	mdRefRegex          = fmt.Sprintf("!\\[.*\\]\\((%s)\\)", imagePath)
-	frontMatterRefRegex = fmt.Sprintf("(?m)^image: (%s)$", imagePath)
+	mdRefRegex          = fmt.Sprintf("(!\\[.*\\])\\((%s)\\)", imagePath)
+	frontMatterRefRegex = fmt.Sprintf("(?m)^(image: )(%s)$", imagePath)
 )
 
 func (c PostContent) Images() []string {
@@ -66,7 +66,16 @@ func (c *PostContent) UpdateImageReferences() {
 	for k, image_ref := range c.image_references {
 		c.image_references[k] = any_img_regex.ReplaceAll(image_ref, webp_repl)
 	}
-	c.full_content = any_img_regex.ReplaceAll(c.full_content, webp_repl)
+	c.updateImageReferencesInContent()
+}
+
+func (c *PostContent) updateImageReferencesInContent() {
+	md_regex := regexp.MustCompile(mdRefRegex)
+	webp_repl1 := []byte("${1}(${3}webp)")
+	c.full_content = md_regex.ReplaceAll(c.full_content, webp_repl1)
+	front_matter_regex := regexp.MustCompile(frontMatterRefRegex)
+	webp_repl2 := []byte("${1}${3}webp")
+	c.full_content = front_matter_regex.ReplaceAll(c.full_content, webp_repl2)
 }
 
 func (c PostContent) Value() []byte {
