@@ -7,6 +7,7 @@ import (
 
 	"github.com/EricDriussi/hugo-image-optimizer/internal/domain"
 	filesystemrepo "github.com/EricDriussi/hugo-image-optimizer/internal/infrastructure/repos/filesystem_repo/image"
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -88,6 +89,7 @@ func imageRepoTests(t *testing.T) {
 	})
 
 	t.Run("#CONVERT", func(t *testing.T) {
+		viper.Set("compression.quality", 50)
 		t.Run("Doesn't convert images from excluded directories", func(t *testing.T) {
 			repo := filesystemrepo.NewImage(imagesTestDir, imagesTestExcludedDirs)
 

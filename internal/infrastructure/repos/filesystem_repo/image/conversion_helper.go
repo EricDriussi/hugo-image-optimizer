@@ -8,7 +8,10 @@ import (
 	"strings"
 
 	"github.com/EricDriussi/hugo-image-optimizer/internal/domain"
+	"github.com/spf13/viper"
 )
+
+var quality = fmt.Sprintf("%d", 100-viper.GetInt("compression.quality"))
 
 func runConversionCommand(image domain.Image) error {
 	if image.IsGif() {
@@ -30,7 +33,7 @@ func gif2webpCommandBuilder(image domain.Image) *exec.Cmd {
 	filepathWithoutExt := strings.TrimSuffix(image.Path(), image.Extension())
 	webpFilepath := fmt.Sprintf("%s.webp", filepathWithoutExt)
 
-	cmdParams := []string{"-q", "50", "-mixed", image.Path(), "-o", webpFilepath}
+	cmdParams := []string{"-q", quality, "-mixed", image.Path(), "-o", webpFilepath}
 	return exec.Command("gif2webp", cmdParams...)
 }
 
@@ -46,6 +49,6 @@ func cwebpCommandBuilder(image domain.Image) *exec.Cmd {
 	filepathWithoutExt := strings.TrimSuffix(image.Path(), image.Extension())
 	webpFilepath := fmt.Sprintf("%s.webp", filepathWithoutExt)
 
-	cmdParams := []string{"-q", "50", image.Path(), "-o", webpFilepath}
+	cmdParams := []string{"-q", quality, image.Path(), "-o", webpFilepath}
 	return exec.Command("cwebp", cmdParams...)
 }

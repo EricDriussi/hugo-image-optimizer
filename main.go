@@ -10,5 +10,3 @@ func main() {
 	config.Load()
 	cmd.Execute()
 }
-
-// TODO.Allow for compression config based on cwebp parameters
