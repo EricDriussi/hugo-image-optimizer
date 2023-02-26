@@ -1,7 +1,5 @@
 # Hugo Image Optimizer
 
-⚠️ WIP!
-
 > Quick and dirty image optimizer for Hugo based websites
 >
 > Removes all unused images, converts the rest (png, jpg and gifs) to a compressed .webp format and updates all references in your posts.
@@ -11,7 +9,7 @@
 I often screw around with my blog, adding and changing images without much attention to size, weight or format.
 As a result, I end up with a bunch of unused images lying around and a less-than ideal performance.
 
-This takes care of these issues without me having to worry about any of it.
+This takes care of these issues without me having to worry about it.
 
 ## Dependencies
 
@@ -21,7 +19,7 @@ This takes care of these issues without me having to worry about any of it.
 
 ## Install
 
-Either download the [latest binary](https://github.com/EricDriussi/hugo-image-optimizer/releases) and add it to your `$PATH` or clone the repo and install it yourself:
+Either download the [latest binary](https://github.com/EricDriussi/hugo-image-optimizer/releases) and add it to your `$PATH` or clone the repo and install it:
 
 ```sh
 git clone git@github.com:EricDriussi/hugo-image-optimizer.git optimizer && cd optimizer && make install
@@ -29,21 +27,28 @@ git clone git@github.com:EricDriussi/hugo-image-optimizer.git optimizer && cd op
 
 ## Config
 
-Create a `optimizer.ini` file in your Hugo website with the following structure (or copy the one in this repo):
+A `optimizer.ini` config file is expected and should look like this:
 
 ```ini
 [dirs]
 posts = content/posts/
 images = static/images/
 images_exclude = whoami donation
+
+[compression]
+quality = 50
 ```
 
-This tells the optimizer where your posts and images are located, as well as what subdirectories to ignore when optimizing images.
+This tells the optimizer where your posts and images are located (can be in subdirectories), what subdirectories to ignore when optimizing images, and how much compression to apply (0-100, 100 for max compression).
 
-The script looks recursively through the directory tree, so both the posts and images can be in subdirectories.
+Add one to your website repo or in `~/.config/`. Specify a different path with `--config`.
+
+If no config file is provided, it will default to the values above.
 
 ## Run
 
-`cd` into your website directory and run `optimize --help` to check out the available commands!
+Either run it from your website directory or use the `--website-path` flag to specify the desired path.
 
-Either run them all at once with `optimize` or separately with `optimize [CMD]` for more fine-grained control.
+Run `optimize --help` to check out the available commands and flags.
+
+You can run them all at once with `optimize` or separately with `optimize [CMD]` for more fine-grained control.
