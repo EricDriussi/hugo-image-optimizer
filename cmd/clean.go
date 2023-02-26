@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -31,6 +30,4 @@ func RmUnusedImages() {
 	if err := imageService.RemoveAllExcept(imageReferences); err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println("Unused images have been removed")
 }

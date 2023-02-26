@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -21,12 +20,9 @@ var convertCmd = &cobra.Command{
 }
 
 func ConvertToWebp() {
-	fmt.Println("Converting all images to .webp")
-	fmt.Println(".gif and large .png might take a while...")
 	imageService := buildImageService()
 
 	if err := imageService.Convert(); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Done converting!")
 }
