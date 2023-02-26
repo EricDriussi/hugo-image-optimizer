@@ -6,15 +6,18 @@ import (
 	"github.com/spf13/viper"
 )
 
-func Load() {
+func Load(cfgFile string) {
 	setDefaults()
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("$HOME/.config/")
 	viper.SetConfigName("optimizer")
 	viper.SetConfigType("ini")
 
-	err := viper.ReadInConfig()
-	if err != nil {
+	if cfgFile != "" {
+		viper.SetConfigFile(cfgFile)
+	}
+
+	if err := viper.ReadInConfig(); err != nil {
 		fmt.Println("No config file was found, sticking with default values")
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/EricDriussi/hugo-image-optimizer/internal/config"
 	imRepo "github.com/EricDriussi/hugo-image-optimizer/internal/infrastructure/repos/filesystem_repo/image"
 	postRepo "github.com/EricDriussi/hugo-image-optimizer/internal/infrastructure/repos/filesystem_repo/post"
 	imSrv "github.com/EricDriussi/hugo-image-optimizer/internal/services/image"
@@ -13,10 +14,17 @@ import (
 	"github.com/spf13/viper"
 )
 
-var version bool
+var (
+	version bool
+	cfgFile string
+)
 
 func init() {
 	rootCmd.Flags().BoolVarP(&version, "version", "v", false, "Version number")
+	rootCmd.Flags().StringVar(&cfgFile, "config", "", "Config file")
+	cleanCmd.Flags().StringVar(&cfgFile, "config", "", "Config file")
+	convertCmd.Flags().StringVar(&cfgFile, "config", "", "Config file")
+	updateCmd.Flags().StringVar(&cfgFile, "config", "", "Config file")
 }
 
 var rootCmd = &cobra.Command{
@@ -26,12 +34,12 @@ var rootCmd = &cobra.Command{
   Removes unused images.
   Converts all images to webp
   Updates all uses
-  WIP!
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		if version {
 			fmt.Println("v1.0.0")
 		} else {
+			config.Load(cfgFile)
 			RmUnusedImages()
 			ConvertToWebp()
 			UpdateReferences()
