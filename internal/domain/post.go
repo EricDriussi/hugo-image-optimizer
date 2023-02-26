@@ -20,11 +20,10 @@ func NewPost(filepath string, rawContent []byte) (Post, error) {
 	if err != nil {
 		return Post{}, err
 	}
-	content := post.NewContent(rawContent)
 
 	newPost := Post{
 		path:    path,
-		content: content,
+		content: post.NewContent(rawContent),
 	}
 
 	return newPost, nil
@@ -44,4 +43,8 @@ func (p Post) ReferencedImagePaths() []string {
 
 func (p Post) Content() string {
 	return string(p.content.Value())
+}
+
+func (p *Post) UpdateImageReferences() {
+	p.content.ChangeImgExtToWebp()
 }

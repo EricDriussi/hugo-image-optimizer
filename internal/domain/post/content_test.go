@@ -70,7 +70,7 @@ func Test_Content(t *testing.T) {
 				imageReference)
 
 			content := post.NewContent([]byte(rawContent))
-			content.UpdateImageReferences()
+			content.ChangeImgExtToWebp()
 
 			assert.NotContains(t, string(content.Value()), imagePath)
 			assert.Contains(t, string(content.Value()), "![image]("+partialPath+".webp)")
@@ -88,7 +88,7 @@ func Test_Content(t *testing.T) {
 				imageReference)
 
 			content := post.NewContent([]byte(rawContent))
-			content.UpdateImageReferences()
+			content.ChangeImgExtToWebp()
 
 			assert.NotContains(t, string(content.Value()), imagePath)
 			assert.Contains(t, string(content.Value()), "image: "+partialPath+".webp")
@@ -105,7 +105,7 @@ func Test_Content(t *testing.T) {
 				imagePath)
 
 			content := post.NewContent([]byte(rawContent))
-			content.UpdateImageReferences()
+			content.ChangeImgExtToWebp()
 
 			assert.Contains(t, string(content.Value()), imagePath)
 			assert.NotContains(t, string(content.Value()), partialPath+".webp")

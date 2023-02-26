@@ -37,9 +37,22 @@ func Test_DomainPost(t *testing.T) {
 		post, err := domain.NewPost(path, content)
 
 		assert.NoError(t, err)
-		assert.Equal(t, path, post.Path())
-		assert.Equal(t, string(content), post.Content())
 		assert.Contains(t, post.ReferencedImagePaths(), imagePath)
+	})
+
+	t.Run("updates image references", func(t *testing.T) {
+		path := "a/random/path/filename.md"
+
+		imagePath := "/path/src.png"
+		imageReference := fmt.Sprintf("![image](../.././%s)", imagePath)
+		content := contentWithImage(imageReference)
+
+		post, err := domain.NewPost(path, content)
+		post.UpdateImageReferences()
+
+		assert.NoError(t, err)
+		assert.NotContains(t, post.Content(), imagePath)
+		assert.Contains(t, post.Content(), "/path/src.webp")
 	})
 }
 

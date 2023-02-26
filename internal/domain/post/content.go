@@ -31,7 +31,7 @@ func (c PostContent) Images() []string {
 	return filterImagePaths(allImages)
 }
 
-func (c *PostContent) UpdateImageReferences() {
+func (c *PostContent) ChangeImgExtToWebp() {
 	c.updateMdReferences()
 	c.updateFrontMatterReferences()
 }
