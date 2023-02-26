@@ -3,6 +3,8 @@ package filesystemrepo
 import (
 	"os"
 	"path/filepath"
+
+	"github.com/EricDriussi/hugo-image-optimizer/internal/domain"
 )
 
 type fsrepo struct {
@@ -25,6 +27,10 @@ func (r fsrepo) Load() (map[string][]byte, error) {
 
 	err := filepath.Walk(r.parsePostsDirDoing(loadTask))
 	return posts, err
+}
+
+func (r fsrepo) Write(post domain.Post) error {
+	return os.WriteFile(post.Path(), []byte(post.Content()), os.ModePerm)
 }
 
 func (r fsrepo) parsePostsDirDoing(toDoTask func(string) error) (string, filepath.WalkFunc) {
