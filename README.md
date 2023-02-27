@@ -19,10 +19,10 @@ This takes care of these issues without me having to worry about it.
 
 ## Install
 
-Either download the [latest binary](https://github.com/EricDriussi/hugo-image-optimizer/releases) and add it to your `$PATH` or clone the repo and install it:
+Either download the [latest binary](https://github.com/EricDriussi/hugo-image-optimizer/releases) and add it to your `$PATH` or install it directly using `go`:
 
 ```sh
-git clone git@github.com:EricDriussi/hugo-image-optimizer.git optimizer && cd optimizer && make install
+go install github.com/EricDriussi/hugo-image-optimizer@latest
 ```
 
 ## Config

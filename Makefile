@@ -14,9 +14,7 @@ compile: ## Compile binary
 
 .PHONY: install
 install: ## Local install
-	@go env -w GOBIN=$$HOME/.local/bin
-	@go install
-	@mv $$HOME/.local/bin/hugo-image-optimizer $$HOME/.local/bin/optimize
+	@go install github.com/EricDriussi/hugo-image-optimizer@latest
 
 .PHONY: setup
 setup: ## Setup dev env
