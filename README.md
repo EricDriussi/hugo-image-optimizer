@@ -25,6 +25,12 @@ Either download the [latest binary](https://github.com/EricDriussi/hugo-image-op
 go install github.com/EricDriussi/hugo-image-optimizer@latest
 ```
 
+Give the binary a nicer name:
+
+```sh
+GOBIN=$(go env GOBIN); BASE_PATH=${GOBIN:-$(go env GOPATH)/bin}; mv ${BASE_PATH}/hugo-image-optimizer ${BASE_PATH}/optimize
+```
+
 ## Config
 
 A `optimizer.ini` config file is expected and should look like this:
