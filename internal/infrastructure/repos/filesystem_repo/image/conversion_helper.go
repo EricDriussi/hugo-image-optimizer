@@ -19,6 +19,7 @@ func runConversionCommand(image domain.Image) error {
 	} else {
 		return img2webp(image)
 	}
+	// TODO: webp2webp(image) ??
 }
 
 func gif2webp(image domain.Image) error {
@@ -42,6 +43,8 @@ func img2webp(image domain.Image) error {
 	if err := cmd.Run(); err != nil {
 		return errors.New(fmt.Sprintf("Couldn't convert image: %s\n", image.Path()))
 	}
+	// TODO: if original is already webp cwebp would overwrite it and rm would remove it
+	// so no image would remain
 	return os.Remove(image.Path())
 }
 

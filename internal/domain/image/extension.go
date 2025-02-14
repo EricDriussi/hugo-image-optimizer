@@ -30,6 +30,7 @@ func isNotEmpty(ext string) bool {
 }
 
 func isSupported(ext string) bool {
+	// TODO: support webp for clean command
 	validExt := regexp.MustCompile(".(jpg|png|jpeg|gif)")
 	return validExt.Match([]byte(ext))
 }

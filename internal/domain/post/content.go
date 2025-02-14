@@ -12,6 +12,7 @@ type PostContent struct {
 }
 
 var (
+	// TODO: support webp for clean command
 	validExt             = "(jpg|png|jpeg|gif)"
 	imagePath            = fmt.Sprintf("(.*\\.)%s", validExt)
 	mdReference          = fmt.Sprintf("(!\\[.*\\])\\((%s)\\)", imagePath)
